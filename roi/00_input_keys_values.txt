@@ -1,0 +1,34 @@
+1   DefaultMode.MPFC
+2   DefaultMode.LP_L
+3   DefaultMode.LP_R
+4   DefaultMode.PCC
+5   SensoriMotor.Lateral_L
+6   SensoriMotor.Lateral_R
+7   SensoriMotor.Superior
+8   Visual.Medial
+9   Visual.Occipital
+10  Visual.Lateral_L
+11  Visual.Lateral_R
+12  Salience.ACC
+13  Salience.AInsula_L
+14  Salience.AInsula_R
+15  Salience.RPFC_L
+16  Salience.RPFC_R
+17  Salience.SMG_L
+18  Salience.SMG_R
+19  DorsalAttention.FEF_L
+20  DorsalAttention.FEF_R
+21  DorsalAttention.IPS_L
+22  DorsalAttention.IPS_R
+23  FrontoParietal.LPFC_L
+24  FrontoParietal.PPC_L
+25  FrontoParietal.LPFC_R
+26  FrontoParietal.PPC_R
+27  Language.IFG_L
+28  Language.IFG_R
+29  Language.pSTG_L
+30  Language.pSTG_R
+
+# NOW ADD LIMBIC NETWORKS ROIS
+HIPP 
+PARAHIPP
