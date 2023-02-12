@@ -43,9 +43,21 @@ echo "Start time: $dt"
 
 #set directories
 : 'call directories.sh'
-source src/config_directories.sh
+source config_directories.sh
 
 #check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
 source dependencies.sh
+
+#create log file
+: 'log file will capture terminal output each time driver is run
+can be used to check for and troubleshoot errors'
+log_file=${log_dir}/log_fmriconnmap.${dt}
+
+#define subjects
+sub_list=`cat ${data_dir}/id_subj`
+cat $sub_list
+: 'count number of lines in sub_list'
+n=awk 'END { print NR }' ${sub_list}
+echo "running analysis for $n subjects"
