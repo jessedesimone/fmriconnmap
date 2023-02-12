@@ -21,14 +21,18 @@
 21  DorsalAttention.IPS_L
 22  DorsalAttention.IPS_R
 23  FrontoParietal.LPFC_L
-24  FrontoParietal.PPC_L
-25  FrontoParietal.LPFC_R
+24  FrontoParietal.LPFC_R
+25  FrontoParietal.PPC_L
 26  FrontoParietal.PPC_R
 27  Language.IFG_L
 28  Language.IFG_R
 29  Language.pSTG_L
 30  Language.pSTG_R
-
-# NOW ADD LIMBIC NETWORKS ROIS
-HIPP 
-PARAHIPP
+31  Limbic.aPaHC_R
+32  Limbic.aPaHC_L
+33  Limbic.pPaHC_R
+34  Limbic.pPaHC_L
+35  Limbic.Hipp_R
+36  Limbic.Hipp_L
+37  Limbic.Amyg_R
+38  Limbic.Amyg_L
