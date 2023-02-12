@@ -48,4 +48,4 @@ source src/config_directories.sh
 #check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
-source s1_dependencies.sh
+source dependencies.sh
