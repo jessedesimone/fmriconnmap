@@ -4,7 +4,7 @@ cat ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver.sh [-h] [-s] [-r] [-n] [-o]
+    Usage: ./driver.sh [-h] [-s] [-r] [-n] | [-o]
     Arguments:
     -h  help
     -s  setup
@@ -12,11 +12,8 @@ gen_error_msg="\
     -n  netcor
     -o  overwrite 
 
-    NOTE: Overwrite option should only be passed when running -srn
-    This option will remove all output files (i.e., all neccesary
-    dependencies for later stages of the code). It is best to not
-    include this option without a complete understanding of the code.
-    User should review all source code in src directory before start.
+    NOTE: Overwrite [-o] will remove all output files for subjects 
+    specified in data/id_subj. Use this option with *extreme caution*. 
 
     "
     while getopts ":hsrno" opt; do
@@ -52,7 +49,6 @@ echo "DRIVER.SH STARTED"
 #set datetime
 : 'used for datetime stamp log files'
 dt=$(date "+%Y.%m.%d.%H.%M.%S")
-echo "Start time: $dt"
 
 #set directories
 : 'call directories.sh'
@@ -75,28 +71,51 @@ source ~/env/bin/activate
 can be used to check for and troubleshoot errors'
 log_file=${log_dir}/log_fmriconnmap.${dt}
 touch $log_file
+echo "Start time: $dt" 2>&1 | tee $log_file
 
 #define subjects
 SUB=`cat ${data_dir}/id_subj`
-echo "number of subjects in analysis"
-awk 'END { print NR }' ${data_dir}/id_subj
+echo "number of subjects in analysis" 2>&1 | tee -a $log_file
+awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 
 #define roi coordinate list
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 
 for sub in ${SUB[@]}
 do
+    echo "*** SUBJECT: $sub ***" 2>&1 | tee -a $log_file
+
+    #define infiles
+    epi=errts.${sub}.anaticor+tlrc
+    anat=anat_final.${sub}+tlrc
+
     cd $data_dir/$sub
     #==========handle options==========
     if [ "$oflag" ]; then
-        echo "++ OVERWRITING OUTPUT DIRECTORY"
+        echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
+        echo "++ OVERWRITING OUTPUT DIRECTORY" 2>&1 | tee -a $log_file
         rm -v !(*+tlrc.*)
     fi
-    if [ "$sflag" ]; then
-        : 'run 00_setup'
-        echo "run 00_setup"
-        cp $ilist 00_list_of_all_roi_centers_test.txt
-        echo $sub > subname.txt
-        tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee $log_fil
+    if [[ -f ${epi}.HEAD ]] && [[ -f ${anat}.HEAD ]]; then
+        : 'check that infiles for subject exist, then proceed'
+        echo "++ input files (epi, anat) exist" 2>&1 | tee -a $log_file
+
+        #here - input if statement to not run code if final output file exists
+        #if [ ! -f <outfile> ]; then run sflag, rflag, nflag
+
+        if [ "$sflag" ]; then
+            : 'run 00_setup.tcsh'
+            cp $ilist 00_list_of_all_roi_centers_test.txt
+            echo $sub > subname.txt
+            tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
+        fi
+
+        #else echo outfiles alread exist for subject
+
+    else
+        : 'terminate script if missing input files'
+        echo "anat and/or epi infiles not found for $sub"
+        echo "terminating script"
+        exit 1
     fi
 done

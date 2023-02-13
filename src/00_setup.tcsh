@@ -12,6 +12,9 @@
 # it is in fact guarded against in the other scripts.
 
 # =================================================================
+
+echo "++ Running 00_setup.tcsh"
+
 # define infiles
 set vsub     = `cat subname.txt`
 set ilist   = 00_list_of_all_roi_centers_test.txt
@@ -55,4 +58,4 @@ end
 #clean up
 \rm ${tlist}
 
-echo "++ setup DONE!"
+echo "++ 00_setup.tcsh DONE!"
