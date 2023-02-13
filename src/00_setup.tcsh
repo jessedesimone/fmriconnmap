@@ -1,6 +1,15 @@
 #!/bin/tcsh
 
-#
+# Setup script
+# Script will generate a series of ROI files based on the specified 
+# MNI coordinates in roi/00_list_of_all_roi_centers.txt. ROI files 
+# will ultimately be combined into a single ROI map. 
+
+# The only condition on the ROIs here is that they *don't* overlap
+# spatially.  While the other program can be designed with a minor
+# change to deal with that situation, here we assume that overlap
+# would be an unwanted thing and a sign of a mistake in processing, so
+# it is in fact guarded against in the other scripts.
 
 # =================================================================
 # define infiles

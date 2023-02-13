@@ -15,10 +15,11 @@ gen_error_msg="\
     NOTE: Overwrite option should only be passed when running -srn
     This option will remove all output files (i.e., all neccesary
     dependencies for later stages of the code). It is best to not
-    include this option without a complete understanding of the code
+    include this option without a complete understanding of the code.
+    User should review all source code in src directory before start.
 
     "
-    while getopts ":hsrn" opt; do
+    while getopts ":hsrno" opt; do
         case ${opt} in
                 h|\?) #help option
                     echo "$gen_error_msg"
@@ -57,6 +58,10 @@ echo "Start time: $dt"
 : 'call directories.sh'
 source config_directories.sh
 
+#enable extended globbing
+: 'enables pattern matching for removing files with overwrite option'
+shopt -s extglob
+
 #check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
@@ -79,16 +84,19 @@ awk 'END { print NR }' ${data_dir}/id_subj
 #define roi coordinate list
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 
-
 for sub in ${SUB[@]}
 do
+    cd $data_dir/$sub
     #==========handle options==========
+    if [ "$oflag" ]; then
+        echo "++ OVERWRITING OUTPUT DIRECTORY"
+        rm -v !(*+tlrc.*)
+    fi
     if [ "$sflag" ]; then
         : 'run 00_setup'
         echo "run 00_setup"
-        cp ${roi_dir}/00_list_of_all_roi_centers_test.txt $data_dir/$sub/
-        echo $sub > $data_dir/$sub/subname.txt
-        cd $data_dir/$sub
+        cp $ilist 00_list_of_all_roi_centers_test.txt
+        echo $sub > subname.txt
         tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee $log_fil
     fi
 done
