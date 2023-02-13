@@ -93,18 +93,19 @@ do
     #==========handle options==========
     if [ "$oflag" ]; then
         echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
-        echo "++ OVERWRITING OUTPUT DIRECTORY" 2>&1 | tee -a $log_file
+        echo "++ !! OVERWRITING OUTPUT DIRECTORY !!" 2>&1 | tee -a $log_file
         rm -v !(*+tlrc.*)
     fi
     if [[ -f ${epi}.HEAD ]] && [[ -f ${anat}.HEAD ]]; then
         : 'check that infiles for subject exist, then proceed'
-        echo "++ input files (epi, anat) exist" 2>&1 | tee -a $log_file
+        echo "++ epi and anat infiles exist" 2>&1 | tee -a $log_file
 
         #here - input if statement to not run code if final output file exists
         #if [ ! -f <outfile> ]; then run sflag, rflag, nflag
 
         if [ "$sflag" ]; then
             : 'run 00_setup.tcsh'
+            echo "++ setup option selected" 2>&1 | tee -a $log_file
             cp $ilist 00_list_of_all_roi_centers_test.txt
             echo $sub > subname.txt
             tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
