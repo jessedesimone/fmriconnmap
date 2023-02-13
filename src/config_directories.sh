@@ -3,7 +3,8 @@
 top=/Users/jessedesimone/DeSimone_Github                #parent directory
 pkg_dir=${top}/fmriconnmap                              #package directory
 data_dir=${pkg_dir}/data                                #data directory
-src_dir=${code_dir}/src                                 #source code directory
-log_dir=${top}/logs; mkdir -p $log_dir                  #log directory
+src_dir=${pkg_dir}/src                                 #source code directory
+log_dir=${pkg_dir}/logs; mkdir -p $log_dir                  #log directory
+roi_dir=${pkg_dir}/roi                                  #roi directory
 
 
