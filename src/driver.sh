@@ -162,7 +162,6 @@ do
                 fi
             fi
         fi
-
     else
         : 'terminate script if missing input files'
         echo "anat and/or epi infiles not found for $sub"
