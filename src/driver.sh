@@ -149,6 +149,7 @@ do
                     echo "outfile already exists | skipping subject"
                 else
                     echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
+                    rm -rf $outfile
                     tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
                 fi
             fi
