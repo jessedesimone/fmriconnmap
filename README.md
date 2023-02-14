@@ -5,14 +5,20 @@
 ## instructions
 ### Clone git repository 
 - Fork repository to your GitHub account and clone repository to local machine git clone < git@github.com:<username>/afniconnmap.git >
-- If running on local machine, source you python environment from the terminal
-- For me, the command is: > source env/bin/activate but yours may differ
+
+### configure python virtual environment
+- This package includes python source code from afni 
+- matplotlib package is required for 02_netcorr.tcsh
+- driver.sh script will source the local python virtual environment before running scripts
+- For me, the terminal command is: > source env/bin/activate but yours may differ
+- This is built into the driver.sh script configuration so update as needed
+- The dependencies.sh script will check that matplotlib is installed and will exit if not
 
 ### Data preprocessing
 - Required input file is error time series (e.g., errts.*+tlrc) file from standard afni_proc.py preproccing pipeline 
 - I used the afni_proc.py anaticor option (Example 9b. Resting state analysis with ANATICOR) for data preprocessing so input files have the file name "errts.${sub}.anaticor+tlrc"
 - Any error time series file from afni_proc.py or FSL FEAT should work, but user will need to update the scripts within this package with the correct file naming
-- Error time series file should be aligned to standard MNI space (e.g. MNI152_T1_2009c or another template)
+- Error time series file should be aligned to standard MNI space (I used the MNI152_T1_2009c template)
 
 ### Data setup
 - In the data directory, create a subdirectory for each subject 

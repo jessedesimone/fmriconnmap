@@ -61,7 +61,7 @@ shopt -s extglob
 #check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
-#source dependencies.sh
+source dependencies.sh
 
 #set the python virtual environment
 source ~/env/bin/activate
