@@ -132,14 +132,25 @@ do
             : 'run 01_make_single_roi_map.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
-            : 'if outfile exists, remove and create new outfile'
+            : 'run script if outfile does not exist '
             outfile=final_roi_map.nii.gz
-            if [ -f $outfile ]; then
-                echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
-                rm -rf final_roi_map.nii.gz
+            if [ ! -f $outfile ]; then
                 tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
-            else
-                tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+            elif [ -f $outfile ]; then
+                : 'if outfile does exist, check to make sure that it
+                contains the correct number of ROIs | only run if the
+                number of ROIs does not match the specified ROI centers |
+                overwrite protection'
+                roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers_test.txt)
+                roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
+                roi_out2="${roi_out1:12}"
+                roi_out3="${roi_out2: :1}"
+                if [ "$roi_in" -eq "$roi_out3" ]; then
+                    echo "outfile already exists | skipping subject"
+                else
+                    echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
+                    tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+                fi
             fi
         fi
 
@@ -147,12 +158,13 @@ do
             : 'run 02_netcorr.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ NetCorr option selected" 2>&1 | tee -a $log_file
-            : ' '
+            : 'run script if outdir does not exist '
             if [ ! -d NETCORR_000_INDIV ]; then
                 tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
             elif [ -d NETCORR_000_INDIV ]; then
-                : 'check to see if number of outfiles match number of roi centers specified
-                only run script if they do not match | overwrite protection'
+                : 'if outdir does exist, check to see if number of outfiles matches
+                the specified number of ROI centers | only run if they do not match |
+                overwrite protection'
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers_test.txt)
                 roi_out=$(ls -l NETCORR_000_INDIV/WB_Z_ROI_00*.nii.gz | grep ^- | wc -l)
                 if [ "$roi_in" -eq "$roi_out" ]; then
@@ -162,6 +174,7 @@ do
                 fi
             fi
         fi
+        
     else
         : 'terminate script if missing input files'
         echo "anat and/or epi infiles not found for $sub"
