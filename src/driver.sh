@@ -13,7 +13,7 @@ gen_error_msg="\
     -o  overwrite 
 
     NOTE: Overwrite [-o] will remove all output files and should be employed with *extreme caution*
-    This option should really only be run if you want to start from a clean slate. 
+    This option should really only be run if you want to start from a clean slate 
 
     "
     while getopts ":hsrno" opt; do
@@ -107,35 +107,61 @@ do
         echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
         echo "++ !! OVERWRITING OUTPUT DIRECTORY !!" 2>&1 | tee -a $log_file
         rm -v !(*+tlrc.*)
+        rm -rf NETCORR_000_INDIV
     fi
     if [[ -f ${epi}.HEAD ]] && [[ -f ${anat}.HEAD ]]; then
         : 'check that infiles for subject exist, then proceed'
         echo "++ epi and anat infiles exist" 2>&1 | tee -a $log_file
 
-        #here - input if statement to not run code if final output file exists
-        #if [ ! -f <outfile> ]; then run sflag, rflag, nflag
-
         if [ "$sflag" ]; then
             : 'run 00_setup.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ setup option selected" 2>&1 | tee -a $log_file
-            tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
+            : 'check to see if number of outfiles match number of roi centers specified
+            only run script if they do not match | overwrite protection'
+            roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers_test.txt)
+            roi_out=$(ls -l roi_mask_00* | grep ^- | wc -l)
+            if [ "$roi_in" -eq "$roi_out" ]; then
+                echo "outfiles already exist | skipping subject"
+            else
+                tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
+            fi
         fi
+
         if [ "$rflag" ]; then
             : 'run 01_make_single_roi_map.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
-            tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+            : 'if outfile exists, remove and create new outfile'
+            outfile=final_roi_map.nii.gz
+            if [ -f $outfile ]; then
+                echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
+                rm -rf final_roi_map.nii.gz
+                tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+            else
+                tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+            fi
         fi
+
         if [ "$nflag" ]; then
             : 'run 02_netcorr.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ NetCorr option selected" 2>&1 | tee -a $log_file
-            tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
+            : ' '
+            if [ ! -d NETCORR_000_INDIV ]; then
+                tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
+            elif [ -d NETCORR_000_INDIV ]; then
+                : 'check to see if number of outfiles match number of roi centers specified
+                only run script if they do not match | overwrite protection'
+                roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers_test.txt)
+                roi_out=$(ls -l NETCORR_000_INDIV/WB_Z_ROI_00*.nii.gz | grep ^- | wc -l)
+                if [ "$roi_in" -eq "$roi_out" ]; then
+                    echo "outfiles already exist | skipping subject"
+                else
+                    tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
+                fi
+            fi
         fi
-
-
-        #else echo outfiles alread exist for subject
 
     else
         : 'terminate script if missing input files'
