@@ -112,13 +112,21 @@ do
 
         if [ "$sflag" ]; then
             : 'run 00_setup.tcsh'
+            echo " " 2>&1 | tee -a $log_file
             echo "++ setup option selected" 2>&1 | tee -a $log_file
             tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
         fi
         if [ "$rflag" ]; then
             : 'run 01_make_single_roi_map.tcsh'
+            echo " " 2>&1 | tee -a $log_file
             echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
             tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+        fi
+        if [ "$nflag" ]; then
+            : 'run 02_netcorr.tcsh'
+            echo " " 2>&1 | tee -a $log_file
+            echo "++ NetCorr option selected" 2>&1 | tee -a $log_file
+            tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
         fi
 
 

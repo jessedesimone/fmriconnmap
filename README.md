@@ -34,9 +34,25 @@
 - Type < ./driver.sh -r >
 - Option to run both concurruently using < ./driver.sh -sr >
 
-### review final_roi_map.nii.gz and final_roi_map.niml.lt
+### QC final_roi_map.nii.gz and final_roi_map.niml.lt
 - final_roi_map.nii.gz should contain the same number of ROIs and match the associated labels in final_roi_map.niml.lt
 - Confirm appropriate size of each ROIs and that the labels are in the correct anatomical locations
+- Individual ROI files labled as roi_mask_*.nii.gz
+- See final_roi_map.*.jpg for example of final_roi_map.nii.gz
+
+### run 02netcorr.tcsh 
+- Navigate to src directory
+- Type < ./driver.sh -n >
+- Option to run concurruently with setup and roi_map scripts < ./driver.sh -srn >
+
+### QC NetCorr output files
+- Output files
+    - NETCORR_000.netcc: matrices of properties of the network of ROIs: Pearson correlation coefficient (CC) and its Fisher-Z transform (FZ)
+    - NETCORR_000_netcc_FZ.jpg: an image of the Fisher-Z transform (FZ) matrix
+    - NETCORR_000.netts: text file containing the mean time series of each ROI
+    - NETCORR_000.roidat: text file containing info of “how full” each ROI is– basically, a way to check if masking or other processing steps might have left null time series in any ROI mask.
+    - NETCORR_000_INDIV/: sub-directory that holds the whole brain correlation maps of each ROI’s average time series; there are also images of those volumes stored there.
+    - WB_Z_ROI*.jpg: sets of images of the WB correlation maps of each ROI. Each ROI has 3 images (axi, cor and sag viewplanes), and there is also a “*_pbar.jpg” file of the colorbar used, and “*_pbar.txt” file that records the colorbar min, max and (optional) threshold value used.
 
 
 
