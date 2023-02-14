@@ -12,8 +12,8 @@ gen_error_msg="\
     -n  netcor
     -o  overwrite 
 
-    NOTE: Overwrite [-o] will remove all output files for subjects 
-    specified in data/id_subj. Use this option with *extreme caution*. 
+    NOTE: Overwrite [-o] will remove all output files and should be employed with *extreme caution*
+    This option should really only be run if you want to start from a clean slate. 
 
     "
     while getopts ":hsrno" opt; do
@@ -82,6 +82,9 @@ awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 ilabtxt=${roi_dir}/00_input_keys_values_test.txt
 
+#define mask file
+anat_mask=${nii_dir}/MNI152_T1_2009c_mask_r.nii
+
 for sub in ${SUB[@]}
 do
     echo " " 2>&1 | tee -a $log_file
@@ -94,7 +97,7 @@ do
     # copy some files
     cp $ilist ${data_dir}/${sub}/00_list_of_all_roi_centers_test.txt
     cp $ilabtxt ${data_dir}/${sub}/00_input_keys_values_test.txt
-    cp ${nii_dir}/MNI152_T1_2009c_mask_r.nii ${data_dir}/${sub}/anat_mask.nii
+    cp $anat_mask ${data_dir}/${sub}/anat_mask.nii
 
     echo $sub > ${data_dir}/${sub}/subname.txt
 

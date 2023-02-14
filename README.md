@@ -5,12 +5,14 @@
 ## instructions
 ### Clone git repository 
 - Fork repository to your GitHub account and clone repository to local machine git clone < git@github.com:<username>/afniconnmap.git >
+- If running on local machine, source you python environment from the terminal
+- For me, the command is: > source env/bin/activate but yours may differ
 
 ### Data preprocessing
 - Required input file is error time series (e.g., errts.*+tlrc) file from standard afni_proc.py preproccing pipeline 
-- I used the afni_proc.py anaticor option (Example 9b. Resting state analysis with ANATICOR) for data preprocessing so input files have the file name <errts.${sub}.anaticor+tlrc>
+- I used the afni_proc.py anaticor option (Example 9b. Resting state analysis with ANATICOR) for data preprocessing so input files have the file name "errts.${sub}.anaticor+tlrc"
 - Any error time series file from afni_proc.py or FSL FEAT should work, but user will need to update the scripts within this package with the correct file naming
-- Error time series file should be warped to standard MNI space (e.g. MNI152_T1_2009c or another template)
+- Error time series file should be aligned to standard MNI space (e.g. MNI152_T1_2009c or another template)
 
 ### Data setup
 - In the data directory, create a subdirectory for each subject 
@@ -19,6 +21,14 @@
 - Store MNI template used in the afni_proc.py registration/warping procedure in nifti directory; this is not used either, but nice to have
 - Create subject list using the following command: touch data/id_subj
 - Add each subject's unique identifier to the first column of id_subj
+
+# Create and configure MNI mask file
+- Create a mask of the anatomical template used during data preprocessing and store in nifti directory
+- I used the MNI152_T1_2009c template in afni_proc.py but yours may be different
+- Navigate to the nifti directory and type: > 3dcalc -a <MNI template image> -expr 'step(a)' -prefix <mask file>
+- Resample the mask file to the resolution of the epi (and the ROIs that will be created) by typing > 3dresample -master <epi file> -rmode NN -prefix <mask file resampled> -inset <mask file>
+- Update the naming convention of the mask file in driver.sh line 86
+- The mask file does not need to be used in this pipeline and you can optionally remove by uncommenting the mask option in 3dNetCor (02_netcorr.tcsh)
 
 ### ROI configuration
 - Navigate to ROI directory
@@ -30,9 +40,9 @@
 
 ### run 00_setup.tcsh and 01_make_single_roi_map.tcsh
 - Navigate to src directory
-- Type < ./driver.sh -s >
-- Type < ./driver.sh -r >
-- Option to run both concurruently using < ./driver.sh -sr >
+- Type > ./driver.sh -s 
+- Type > ./driver.sh -r 
+- Option to run both concurruently using > ./driver.sh -sr 
 
 ### QC final_roi_map.nii.gz and final_roi_map.niml.lt
 - final_roi_map.nii.gz should contain the same number of ROIs and match the associated labels in final_roi_map.niml.lt
@@ -42,7 +52,7 @@
 
 ### run 02netcorr.tcsh 
 - Navigate to src directory
-- Type < ./driver.sh -n >
+- Type > ./driver.sh -n 
 - Option to run concurruently with setup and roi_map scripts < ./driver.sh -srn >
 
 ### QC NetCorr output files
