@@ -94,6 +94,8 @@ do
     # copy some files
     cp $ilist ${data_dir}/${sub}/00_list_of_all_roi_centers_test.txt
     cp $ilabtxt ${data_dir}/${sub}/00_input_keys_values_test.txt
+    cp ${nii_dir}/MNI152_T1_2009c_mask_r.nii ${data_dir}/${sub}/anat_mask.nii
+
     echo $sub > ${data_dir}/${sub}/subname.txt
 
     cd $data_dir/$sub

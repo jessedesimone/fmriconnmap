@@ -17,6 +17,7 @@ set vsub    = `cat subname.txt`
 # define infiles
 set vepi    = errts."${vsub}".anaticor+tlrc
 set vanatss = anat_final."${vsub}"+tlrc
+set vmask    = anat_mask.nii
 
 # output ROI map volume
 set opref     = final_roi_map
@@ -37,6 +38,7 @@ set ocorr     = NETCORR
 3dNetCorr                                       \
     -echo_edu                                   \
     -inset   ${vepi}                            \
+    -mask    ${vmask}                           \
     -in_rois ${omap}                            \
     -prefix  ${ocorr}                           \
     -fish_z                                     \
