@@ -28,10 +28,10 @@ gen_error_msg="\
                 r) #run roi map
                     rflag=1
                     ;;
-                n) run netcor
+                n) #run netcor
                     nflag=1
                     ;;
-                o) overwrite
+                o) #overwrite
                     oflag=1
                     ;;
         esac
@@ -78,16 +78,23 @@ SUB=`cat ${data_dir}/id_subj`
 echo "number of subjects in analysis" 2>&1 | tee -a $log_file
 awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 
-#define roi coordinate list
+#define roi coordinate files
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
+ilabtxt=${roi_dir}/00_input_keys_values_test.txt
 
 for sub in ${SUB[@]}
 do
+    echo " " 2>&1 | tee -a $log_file
     echo "*** SUBJECT: $sub ***" 2>&1 | tee -a $log_file
 
     #define infiles
     epi=errts.${sub}.anaticor+tlrc
     anat=anat_final.${sub}+tlrc
+
+    # copy some files
+    cp $ilist ${data_dir}/${sub}/00_list_of_all_roi_centers_test.txt
+    cp $ilabtxt ${data_dir}/${sub}/00_input_keys_values_test.txt
+    echo $sub > ${data_dir}/${sub}/subname.txt
 
     cd $data_dir/$sub
     #==========handle options==========
@@ -106,10 +113,14 @@ do
         if [ "$sflag" ]; then
             : 'run 00_setup.tcsh'
             echo "++ setup option selected" 2>&1 | tee -a $log_file
-            cp $ilist 00_list_of_all_roi_centers_test.txt
-            echo $sub > subname.txt
             tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
         fi
+        if [ "$rflag" ]; then
+            : 'run 01_make_single_roi_map.tcsh'
+            echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
+            tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+        fi
+
 
         #else echo outfiles alread exist for subject
 

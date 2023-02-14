@@ -1,23 +1,21 @@
 #!/bin/tcsh
 
-# Setup script
-# Script will generate a series of ROI files based on the specified 
-# MNI coordinates in roi/00_list_of_all_roi_centers.txt. ROI files 
-# will ultimately be combined into a single ROI map. 
+# Module to create individual ROI masks
 
-# The only condition on the ROIs here is that they *don't* overlap
-# spatially.  While the other program can be designed with a minor
-# change to deal with that situation, here we assume that overlap
-# would be an unwanted thing and a sign of a mistake in processing, so
-# it is in fact guarded against in the other scripts.
+# Script will generate a series of ROI files based on the specified MNI coordinates in roi/00_list_of_all_roi_centers.txt
+# The ROI files will ultiumately be combined into a single ROI map later
+# The only condition is that the ROIs *cannot* overlap spatially
 
+# Credit to PA Taylor (NIMH, NIH)
 # =================================================================
 
 echo "++ Running 00_setup.tcsh"
 
-# define infiles
-set vsub     = `cat subname.txt`
+# configuration files
+set vsub    = `cat subname.txt`
 set ilist   = 00_list_of_all_roi_centers_test.txt
+
+# define infiles
 set vepi    = errts."${vsub}".anaticor+tlrc
 
 # define outputs/temp files
@@ -59,3 +57,4 @@ end
 \rm ${tlist}
 
 echo "++ 00_setup.tcsh DONE!"
+exit 0
