@@ -1,5 +1,6 @@
 #!/bin/sh
-: 'Driver to run all fmriconnmap modules'
+: 'Driver to run all fmriconnmap modules
+Create individual network-level connectivity maps for specified ROI coordinate centers'
 
 cat ../CHANGELOG.md
 
@@ -8,16 +9,16 @@ gen_error_msg="\
     Usage: ./driver.sh [-h] [-s] [-r] [-n] | [-o]
     Arguments:
     -h  help
-    -s  setup
-    -r  roi map
-    -n  netcor
+    -s  setup individual
+    -r  roi map individual
+    -n  netcorr individual
     -o  overwrite 
 
     NOTE: Overwrite [-o] will remove all output files and should be employed with *extreme caution*
     This option should really only be run if you want to start from a clean slate 
 
     "
-    while getopts ":hsrno" opt; do
+    while getopts ":hsrnmo" opt; do
         case ${opt} in
                 h|\?) #help option
                     echo "$gen_error_msg"
@@ -29,7 +30,7 @@ gen_error_msg="\
                 r) #run roi map
                     rflag=1
                     ;;
-                n) #run netcor
+                n) #run netcorr individual
                     nflag=1
                     ;;
                 o) #overwrite
@@ -83,7 +84,8 @@ awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 ilabtxt=${roi_dir}/00_input_keys_values_test.txt
 
-#define mask file
+#define anatomical file
+anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
 anat_mask=${nii_dir}/MNI152_T1_2009c_mask_r.nii
 
 for sub in ${SUB[@]}
@@ -184,7 +186,3 @@ do
         exit 1
     fi
 done
-
-
-# here insert code if ntwkmap option is selected
-cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
