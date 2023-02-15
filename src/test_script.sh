@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source config_directories.sh
+source ~/env/bin/activate
 
 
 SUB=`cat ${data_dir}/id_subj`
@@ -58,18 +59,25 @@ rm -rf ${out_dir}/_tmp*
 
 # ------------- Create connected network maps ---------------
 # Get ACF parameters for 3dClustSim
-3dFWHMx -mask WB_Z_ROI_001_thr001_unc_mask.nii.gz -input WB_Z_ROI_001_mean_pos.nii.gz > WB_Z_ROI_001_acf_params.txt
+3dFWHMx -mask ${out_dir}/WB_Z_ROI_001_thr001_unc_mask.nii.gz -input ${out_dir}/WB_Z_ROI_001_mean_pos.nii.gz > ${out_dir}/WB_Z_ROI_001_acf_params.txt
+awk 'NR==2' ${out_dir}/WB_Z_ROI_001_acf_params.txt > ${out_dir}/WB_Z_ROI_001_acf_params2.txt
 
-# clean up
-# rm -rf 3dFWHMx.1D
-# rm -rf 3dFWHMx.1D.png
+# Clean up
+rm -rf 3dFWHMx.1D
+rm -rf 3dFWHMx.1D.png
+
+# extract acf parameters for input to 3dClustSim
+delimiter=' '
+acf1="$(cut -d "$delimiter" -f 1-2 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
+acf2="$(cut -d "$delimiter" -f 3-4 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
+acf3="$(cut -d "$delimiter" -f 5-6 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
+acf_params=( $acf1 $acf2 $acf3)
 
 
-# grep acf values
 
 
 # Run 3dClustSim to get the voxel-level cluster threshold
-3dClustSim -mask WB_Z_ROI_001_thr001_unc_mask.nii.gz -acf 0.993 17.1 48.1 -athr 0.05 -pthr 0.001 -prefix clustim_out
+#3dClustSim -mask WB_Z_ROI_001_thr001_unc_mask.nii.gz -acf 0.993 17.1 48.1 -athr 0.05 -pthr 0.001 -prefix clustim_out
 
 
 # grep cluster 
