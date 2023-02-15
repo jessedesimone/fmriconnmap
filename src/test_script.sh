@@ -24,7 +24,7 @@ done
 
 # creates uncorrected parameter statistic WB z map and cluster mask
 # also provides text output of cluster report
-3dClusterize > ${out_dir}/WB_Z_ROI_001_thr001_unc.txt               \
+3dClusterize                                                        \
     -inset ${out_dir}/WB_Z_ROI_001_mean_pos.nii.gz                  \
     -ithr 0                                                         \
     -idat 0                                                         \
@@ -35,9 +35,6 @@ done
 
 # creates a binary mask file of the uncorrected WB z map
 3dcalc -a ${out_dir}/WB_Z_ROI_001_thr001_unc_clust_mask.nii.gz -prefix ${out_dir}/WB_Z_ROI_001_thr001_unc_mask.nii.gz -expr 'step(a)'
-
-# clean up temp files
-rm -rf ${out_dir}/_tmp*
 
 # ------------- QC uncorrected network maps ---------------
 @chauffeur_afni                                                 \
@@ -61,10 +58,6 @@ rm -rf ${out_dir}/_tmp*
 3dFWHMx -mask ${out_dir}/WB_Z_ROI_001_thr001_unc_mask.nii.gz -input ${out_dir}/WB_Z_ROI_001_mean_pos.nii.gz > ${out_dir}/WB_Z_ROI_001_acf_params.txt
 awk 'NR==2' ${out_dir}/WB_Z_ROI_001_acf_params.txt > ${out_dir}/WB_Z_ROI_001_acf_params2.txt
 
-# Clean up
-rm -rf 3dFWHMx.1D
-rm -rf 3dFWHMx.1D.png
-
 # extract acf parameters for input to 3dClustSim
 delimiter=' '
 acf1="$(cut -d "$delimiter" -f 1-2 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
@@ -79,7 +72,7 @@ clustsize="$(cut -d "$delimiter" -f 4-5 ${out_dir}/WB_Z_ROI_001_clustsize.txt)"
 echo "$clustsize"
 
 # Repeat 3dClusterize with cluster level thresholding
-3dClusterize > ${out_dir}/WB_Z_ROI_001_thr001_fwer.txt               \
+3dClusterize                                                        \
     -inset ${out_dir}/WB_Z_ROI_001_mean_pos.nii.gz                  \
     -ithr 0                                                         \
     -idat 0                                                         \
@@ -105,3 +98,8 @@ echo "$clustsize"
         -set_xhairs OFF                                         \
         -label_mode 1 -label_size 3                             \
         -do_clean
+
+# ------------- Clean up ---------------
+rm -rf ${out_dir}/_tmp*
+rm -rf ${out_dir}/3dFWHMx*
+rm -rf ${out_dir}/WB_Z_ROI_001_acf_params.txt
