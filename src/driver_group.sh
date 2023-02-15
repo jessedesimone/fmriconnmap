@@ -48,7 +48,7 @@ if [! -f ${out_dir}/${anat_template}.HEAD ]; then
 fi
 
 cd $out_dir
-tcsh -c ${src_dir}/03_connmap.tcsh 2>&1 | tee -a $log_file
+tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
 
 
 
