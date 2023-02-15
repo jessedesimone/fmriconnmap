@@ -48,7 +48,7 @@ rm -rf ${out_dir}/_tmp*
         -blowup 1                                               \
         -save_ftype JPEG                                        \
         -prefix   ${out_dir}/WB_Z_ROI_001_thr001_unc            \
-        -pbar_saveim ${out_dir}"WB_Z_ROI_001_thr001_unc.jpg"    \
+        -pbar_saveim ${out_dir}/"WB_Z_ROI_001_thr001_unc.jpg"    \
         -montx 3 -monty 2                                       \
         -set_xhairs OFF                                         \
         -label_mode 1 -label_size 3                             \
