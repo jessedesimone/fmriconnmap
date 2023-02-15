@@ -38,18 +38,18 @@ rm -rf ${out_dir}/_tmp*
 
 # ------------- QC uncorrected network maps ---------------
 
-@chauffeur_afni                                             \
-        -ulay  ${out_dir}/MNI152_T1_2009c+tlrc              \
-        -box_focus_slices ${out_dir}/MNI152_T1_2009c+tlrc   \
-        -olay  ${out_dir}/WB_Z_ROI_001_thr001_unc.nii.gz    \
-        -cbar Reds_and_Blues_Inv                            \
-        -func_range 1                                       \
-        -opacity 6                                          \
-        -blowup 1                                           \
-        -save_ftype JPEG                                    \
-        -prefix   ${out_dir}/test                           \
-        -pbar_saveim ${out_dir}"test_pbar.jpg"              \
-        -montx 3 -monty 2                                   \
-        -set_xhairs OFF                                     \
-        -label_mode 1 -label_size 3                         \
+@chauffeur_afni                                                 \
+        -ulay  ${out_dir}/MNI152_T1_2009c+tlrc                  \
+        -box_focus_slices ${out_dir}/MNI152_T1_2009c+tlrc       \
+        -olay  ${out_dir}/WB_Z_ROI_001_thr001_unc.nii.gz        \
+        -cbar Reds_and_Blues_Inv                                \
+        -func_range 1                                           \
+        -opacity 6                                              \
+        -blowup 1                                               \
+        -save_ftype JPEG                                        \
+        -prefix   ${out_dir}/WB_Z_ROI_001_thr001_unc            \
+        -pbar_saveim ${out_dir}"WB_Z_ROI_001_thr001_unc.jpg"    \
+        -montx 3 -monty 2                                       \
+        -set_xhairs OFF                                         \
+        -label_mode 1 -label_size 3                             \
         -do_clean
