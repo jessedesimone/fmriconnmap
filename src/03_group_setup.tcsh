@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 # Setup module for creating group-level connectivity maps 
-
+# Creates tmp list of ROIs based on the specified MNI coordinates in roi/00_list_of_all_roi_centers.txt
 
 
 
