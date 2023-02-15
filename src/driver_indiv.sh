@@ -117,7 +117,7 @@ do
         echo "++ epi and anat infiles exist" 2>&1 | tee -a $log_file
         #==========setup==========
         if [ "$sflag" ]; then
-            : 'run 00_setup.tcsh'
+            : 'run 00_indiv_setup.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ setup option selected" 2>&1 | tee -a $log_file
             : 'check to see if number of outfiles match number of roi centers specified
@@ -127,18 +127,18 @@ do
             if [ "$roi_in" -eq "$roi_out" ]; then
                 echo "outfiles already exist | skipping subject"
             else
-                tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
+                tcsh -c ${src_dir}/00_indiv_setup.tcsh 2>&1 | tee -a $log_file
             fi
         fi
         #==========create ROI map==========
         if [ "$rflag" ]; then
-            : 'run 01_make_single_roi_map.tcsh'
+            : 'run 01_indiv_roi_map.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
             : 'run script if outfile does not exist '
             outfile=final_roi_map.nii.gz
             if [ ! -f $outfile ]; then
-                tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+                tcsh -c ${src_dir}/01_indiv_roi_map.tcsh 2>&1 | tee -a $log_file
             elif [ -f $outfile ]; then
                 : 'if outfile does exist, check to make sure that it
                 contains the correct number of ROIs | only run if the
@@ -153,18 +153,18 @@ do
                 else
                     echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
                     rm -rf $outfile
-                    tcsh -c ${src_dir}/01_make_single_roi_map.tcsh 2>&1 | tee -a $log_file
+                    tcsh -c ${src_dir}/01_indiv_roi_map.tcsh 2>&1 | tee -a $log_file
                 fi
             fi
         fi
         #==========create correlation map==========
         if [ "$nflag" ]; then
-            : 'run 02_netcorr.tcsh'
+            : 'run 02_indiv_netcorr.tcsh'
             echo " " 2>&1 | tee -a $log_file
             echo "++ NetCorr option selected" 2>&1 | tee -a $log_file
             : 'run script if outdir does not exist '
             if [ ! -d NETCORR_000_INDIV ]; then
-                tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
+                tcsh -c ${src_dir}/02_indiv_netcorr.tcsh 2>&1 | tee -a $log_file
             elif [ -d NETCORR_000_INDIV ]; then
                 : 'if outdir does exist, check to see if number of outfiles matches
                 the specified number of ROI centers | only run if they do not match |
@@ -174,7 +174,7 @@ do
                 if [ "$roi_in" -eq "$roi_out" ]; then
                     echo "outfiles already exist | skipping subject"
                 else
-                    tcsh -c ${src_dir}/02_netcorr.tcsh 2>&1 | tee -a $log_file
+                    tcsh -c ${src_dir}/02_indiv_netcorr.tcsh 2>&1 | tee -a $log_file
                 fi
             fi
         fi
