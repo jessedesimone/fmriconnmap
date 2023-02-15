@@ -112,7 +112,7 @@ do
     if [[ -f ${epi}.HEAD ]] && [[ -f ${anat}.HEAD ]]; then
         : 'check that infiles for subject exist, then proceed'
         echo "++ epi and anat infiles exist" 2>&1 | tee -a $log_file
-
+        #==========setup==========
         if [ "$sflag" ]; then
             : 'run 00_setup.tcsh'
             echo " " 2>&1 | tee -a $log_file
@@ -127,7 +127,7 @@ do
                 tcsh -c ${src_dir}/00_setup.tcsh 2>&1 | tee -a $log_file
             fi
         fi
-
+        #==========create ROI map==========
         if [ "$rflag" ]; then
             : 'run 01_make_single_roi_map.tcsh'
             echo " " 2>&1 | tee -a $log_file
@@ -144,8 +144,8 @@ do
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers_test.txt)
                 roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                 roi_out2="${roi_out1:12}"
-                roi_out3="${roi_out2: :1}"
-                if [ "$roi_in" -eq "$roi_out3" ]; then
+                roi_out="${roi_out2: :1}"
+                if [ "$roi_in" -eq "$roi_out" ]; then
                     echo "outfile already exists | skipping subject"
                 else
                     echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
@@ -154,7 +154,7 @@ do
                 fi
             fi
         fi
-
+        #==========create correlation map==========
         if [ "$nflag" ]; then
             : 'run 02_netcorr.tcsh'
             echo " " 2>&1 | tee -a $log_file
