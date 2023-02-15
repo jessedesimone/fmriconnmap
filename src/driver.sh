@@ -1,4 +1,5 @@
 #!/bin/sh
+: 'Driver to run all fmriconnmap modules'
 
 cat ../CHANGELOG.md
 
