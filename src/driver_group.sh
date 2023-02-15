@@ -48,6 +48,9 @@ if [! -f ${out_dir}/${anat_template}.HEAD ]; then
 fi
 
 cd $out_dir
+
+#==========setup==========
+: 'copy some files and create a temp list of ROIs'
 tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
 
 
