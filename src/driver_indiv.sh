@@ -71,7 +71,7 @@ source ~/env/bin/activate
 #create log file
 : 'log file will capture terminal output each time driver is run
 can be used to check for and troubleshoot errors'
-log_file=${log_dir}/log_fmriconnmap.${dt}
+log_file=${log_dir}/log_fmriconnmap_indiv.${dt}
 touch $log_file
 echo "Start time: $dt" 2>&1 | tee $log_file
 
