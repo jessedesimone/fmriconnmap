@@ -184,3 +184,7 @@ do
         exit 1
     fi
 done
+
+
+# here insert code if ntwkmap option is selected
+cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt

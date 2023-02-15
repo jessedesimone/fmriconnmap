@@ -1,5 +1,42 @@
 #!/bin/bash
 
+: 'this code will create a group-level connectivity map/mask for a single ROI
+now need to run for the number of specified ROI centers
+
+tcsh code:
+#!/bin/tcsh
+
+# Module to create group-level network connectivity maps
+
+# =================================================================
+
+# configuration files
+set ilist   = 00_list_of_all_roi_centers_test.txt
+
+# define outputs/temp files
+set opref   = roi_mask
+set tlist   = _tmp_roi_list.txt
+
+
+# get dimensions of ROI coordinate list
+set dims = `1d_tool.py              \
+                -show_rows_cols     \
+                -verb 0             \
+                -infile "${ilist}"`
+
+echo "Dimensions of ROI coordinates list: "
+echo "${dims}"
+
+foreach ii ( `seq 1 1 ${dims[1]}` )
+    set iii = `printf "%03d" ${ii}`
+
+end
+exit 0
+
+
+'
+
+
 source config_directories.sh
 source ~/env/bin/activate
 
