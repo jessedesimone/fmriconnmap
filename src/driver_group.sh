@@ -38,12 +38,16 @@ echo "++ Creating group-level connectivity maps" 2>&1 | tee -a $log_file
 #define roi coordinate files
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 
+#define anat template
+anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
+
 #copy required files to outdir
 cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
-cp ${anat_template}* $out_dir/
+if [! -f ${out_dir}/${anat_template}.HEAD ]; then
+    3dcopy ${anat_template} ${out_dir}/
+fi
 
-
-
+cd $out_dir
 tcsh -c ${src_dir}/03_connmap.tcsh 2>&1 | tee -a $log_file
 
 
