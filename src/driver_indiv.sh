@@ -67,6 +67,7 @@ code should run fine on current LRN systems'
 source dependencies.sh
 
 #set the python virtual environment
+: 'depends on system | may not be needed'
 source ~/env/bin/activate
 
 #create log file

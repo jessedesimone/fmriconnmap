@@ -4,10 +4,6 @@
 # Creates tmp list of ROIs based on the specified MNI coordinates in roi/00_list_of_all_roi_centers.txt
 # Used to create subdirectories for each group-level network map
 
-
-
-
-
 # =================================================================
 
 echo "++ Running 03_group_setup.tcsh for setup"

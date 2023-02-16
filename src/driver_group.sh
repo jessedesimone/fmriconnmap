@@ -45,6 +45,7 @@ code should run fine on current LRN systems'
 source dependencies.sh
 
 #set the python virtual environment
+: 'depends on system | may not be needed'
 source ~/env/bin/activate
 
 #create log file
@@ -65,7 +66,6 @@ ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 
 #define anat template
 anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
-
 
 #==========handle options==========
 if [ "$oflag" ]; then
@@ -90,36 +90,37 @@ fi
 cd $out_dir
 
 #==========setup==========
-#run setup script
+
 #copy required files to outdir
 cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
-if [! -f ${out_dir}/${anat_template}.HEAD ]; then
-    3dcopy ${anat_template} ${out_dir}/
-fi
 
-: 'creates a temp list of ROIs'
+#run setup script
 if [ -f _tmp_roi_list.txt ]; then
     rm -rf _tmp_roi_list.txt
 fi
+echo " " 2>&1 | tee -a $log_file
 tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
 
 ROI=`cat _tmp_roi_list.txt`
 for roi in ${ROI[@]}; 
     do mkdir -p $roi
 
+    3dcopy ${anat_template} $roi/
+
     : 'copy individual z maps for creation of group level maps'
     echo "++ copying individual subject z maps" 2>&1 | tee -a $log_file
     for sub in ${SUB[@]}
     do
-        cp ${data_dir}/$sub/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_WB_Z_ROI_${roi}.nii.gz
+        cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_WB_Z_ROI_${roi}.nii.gz
     done
 
+    echo $roi > ${roi}/roiname.txt
+
     cd $roi
-        #==========create group-level connectivity map==========
-        #here - run tcsh script for group level connectivity map
+        : 'now source tcsh scripts to create group-level connectivity maps'
+        tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
 
 
-        #rm -rf _tmp*
     cd ../
 
 done
