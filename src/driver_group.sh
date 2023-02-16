@@ -114,12 +114,15 @@ for roi in ${ROI[@]};
         cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_WB_Z_ROI_${roi}.nii.gz
     done
 
-    echo $roi > ${roi}/roiname.txt
+    echo $roi > ${roi}/_tmp_roiname.txt
 
     cd $roi
         : 'now source tcsh scripts to create group-level connectivity maps'
         tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
 
+
+    #clean up _tmp files
+    rm -rf _tmp*
 
     cd ../
 

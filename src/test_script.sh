@@ -35,9 +35,10 @@ done
     -ithr 0                                                         \
     -idat 0                                                         \
     -NN 1                                                           \
-    -1sided RIGHT_TAIL p=0.001                                      \
+    -1sided RIGHT_TAIL p=0.01                                      \
     -pref_map ${out_dir}/WB_Z_ROI_001_thr001_unc_clust_mask.nii.gz  \
-    -pref_dat ${out_dir}/WB_Z_ROI_001_thr001_unc.nii.gz
+    -pref_dat ${out_dir}/WB_Z_ROI_001_thr001_unc.nii.gz             \
+    -abs_table_data > test.txt
 
 # creates a binary mask file of the uncorrected WB z map
 3dcalc -a ${out_dir}/WB_Z_ROI_001_thr001_unc_clust_mask.nii.gz -prefix ${out_dir}/WB_Z_ROI_001_thr001_unc_mask.nii.gz -expr 'step(a)'

@@ -1,7 +1,6 @@
 #!/bin/tcsh
 
-# Module for creating group-level functional network connectivity maps
-# Creates group-averaged z-score connectivity maps for each ROI center
+# Module for group-averaged z-score connectivity maps for each ROI center
 # Creates mask file containing only voxels positively correlated with ROI
 # Preserves positively correlated voxels only (removes anticorrelated voxels)
 
@@ -12,14 +11,14 @@ echo "++ Running 04_group_WB_mean_maps tcsh to create WB group-averaged z-score 
 #set the ROI number
 set vname    = `cat roiname.txt`
 
-# List of initial N z-score map files to be combined
-set izmaps    = _tmp_*_WB_Z_ROI_"${vname}".nii.gz
+# Set naming for individual z-score map files to be combined
+set izmaps   = _tmp_*_WB_Z_ROI_"${vname}".nii.gz
 
-# out files: made, then cleaned
+# set outfile names
 set opref    = grp_wb_z
 set omean    = ${opref}_0_"${vname}"_mean.nii.gz
 set oposm    = ${opref}_1_"${vname}"_pos_mask.nii.gz
-set opos     = ${opref}_2_"${vname}"_pos.nii.gz
+set opos     = ${opref}_2_"${vname}"_mean_pos.nii.gz
 
 #==========create group-averaged z-score map==========
 
@@ -33,6 +32,6 @@ set opos     = ${opref}_2_"${vname}"_pos.nii.gz
 3dcalc -a $omean -b $oposm -prefix $opos -expr 'a*b'      
 
 #clean up tmp files
-#rm -rf _tmp*
+rm -rf _tmp*
 
 exit 0
