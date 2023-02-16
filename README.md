@@ -32,8 +32,8 @@
 ### Create and configure MNI mask file
 - Create a mask of the anatomical template used during data preprocessing and store in nifti directory
 - I used the MNI152_T1_2009c template in afni_proc.py but yours may be different
-- Navigate to the nifti directory and type: > 3dcalc -a <MNI template image> -expr 'step(a)' -prefix <mask file>
-- Resample the mask file to the resolution of the epi (and the ROIs that will be created) by typing > 3dresample -master <epi file> -rmode NN -prefix <mask file resampled> -inset <mask file>
+- Navigate to the nifti directory and type: > 3dcalc -a *MNI template image* -expr 'step(a)' -prefix *mask file*
+- Resample the mask file to the resolution of the epi (and the ROIs that will be created) by typing > 3dresample -master *epi file* -rmode NN -prefix *mask file resampled* -inset *mask file*
 - Update the naming convention of the mask file in driver_indiv.sh the default is "MNI152_T1_2009c_mask_r.nii"
 - The mask file does not need to be used in this pipeline and you can optionally remove by uncommenting the mask option in 3dNetCor (02_indiv_netcorr.tcsh); I recommend using it to avoid noise outside of brain tissue
 
