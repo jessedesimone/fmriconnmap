@@ -1,17 +1,18 @@
 #!/bin/sh
-: 'Driver to run all fmriconnmap modules
-Create individual network-level connectivity maps for specified ROI coordinate centers'
+: 'Driver to create subject-level functional connectivity maps for specified ROI coordinate centers'
 
 cat ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver.sh [-h] [-s] [-r] [-n] | [-o]
-    Arguments:
-    -h  help
+    Usage: ./driver_indiv.sh [-s] [-r] [-n] | [-o] | [-h]
+    Required arguments:
     -s  setup individual
     -r  roi map individual
     -n  netcorr individual
+
+    Optional arguments:
+    -h  help
     -o  overwrite 
 
     NOTE: Overwrite [-o] will remove all output files and should be employed with *extreme caution*
@@ -74,6 +75,7 @@ can be used to check for and troubleshoot errors'
 log_file=${log_dir}/log_fmriconnmap_indiv.${dt}
 touch $log_file
 echo "Start time: $dt" 2>&1 | tee $log_file
+echo "++ Creating subject-level connectivity maps" 2>&1 | tee -a $log_file
 
 #define subjects
 SUB=`cat ${data_dir}/id_subj`
