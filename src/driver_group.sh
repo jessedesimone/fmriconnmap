@@ -119,10 +119,11 @@ for roi in ${ROI[@]};
     cd $roi
         : 'now source tcsh scripts to create group-level connectivity maps'
         tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+        tcsh -c ${src_dir}/05_group_connmap.tcsh 2>&1 | tee -a $log_file
 
 
     #clean up _tmp files
-    rm -rf _tmp*
+    #rm -rf _tmp*
 
     cd ../
 

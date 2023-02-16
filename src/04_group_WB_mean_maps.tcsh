@@ -6,10 +6,10 @@
 
 # =================================================================
 
-echo "++ Running 04_group_WB_mean_maps tcsh to create WB group-averaged z-score maps for each ROI center"
+echo "++ Running 04_group_WB_mean_maps.tcsh to create WB group-averaged z-score maps for each ROI center"
 
 #set the ROI number
-set vname    = `cat roiname.txt`
+set vname    = `cat _tmp_roiname.txt`
 
 # Set naming for individual z-score map files to be combined
 set izmaps   = _tmp_*_WB_Z_ROI_"${vname}".nii.gz
@@ -30,8 +30,5 @@ set opos     = ${opref}_2_"${vname}"_mean_pos.nii.gz
 
 #calculates postive-only mean WB z map
 3dcalc -a $omean -b $oposm -prefix $opos -expr 'a*b'      
-
-#clean up tmp files
-rm -rf _tmp*
 
 exit 0
