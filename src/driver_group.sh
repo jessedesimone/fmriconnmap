@@ -103,7 +103,11 @@ tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
 
 ROI=`cat _tmp_roi_list.txt`
 for roi in ${ROI[@]}; 
-    do mkdir -p $roi
+    do
+    echo " " 2>&1 | tee -a $log_file
+    echo "++++++++++++" 2>&1 | tee -a $log_file
+    echo "++ Creating group-level connectivity map for ROI $roi" 2>&1 | tee -a $log_file
+    mkdir -p $roi
 
     3dcopy ${anat_template} $roi/
 
@@ -121,9 +125,10 @@ for roi in ${ROI[@]};
         tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
         tcsh -c ${src_dir}/05_group_connmap.tcsh 2>&1 | tee -a $log_file
 
-
     #clean up _tmp files
-    #rm -rf _tmp*
+    rm -rf _tmp*
+    rm -rf 3dFWHMx*
+    rm -rf MNI*
 
     cd ../
 

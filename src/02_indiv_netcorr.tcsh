@@ -45,8 +45,7 @@ set ocorr     = NETCORR
     -ts_wb_Z  -nifti                            \
     -ts_out
 
-# make image of correlation matrix (Fisher-Z transform) of average ROI
-# time series
+# make image of correlation matrix (Fisher-Z transform) of average ROI time series
 fat_mat_sel.py                                  \
     -m ${ocorr}_000.netcc                       \
     -P 'FZ' --A_plotmin=-1 --B_plotmax=1        \
