@@ -11,7 +11,7 @@ gen_error_msg="\
     -o  overwrite existing output directory
 
     "
-    while getopts ":hsrnmo" opt; do
+    while getopts ":ho" opt; do
         case ${opt} in
                 h|\?) #help option
                     echo "$gen_error_msg"
@@ -71,7 +71,8 @@ anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
 if [ "$oflag" ]; then
     echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
     if [ -d $out_dir ]; then
-        echo "Output directory exists | !!! OVERWRITING !!!"
+        echo "Output directory exists | !!! OVERWRITING OUTPUT DIRECTORY !!!"
+        echo "Output directory path: $out_dir"
         rm -rf $out_dir
         mkdir $out_dir
     else
@@ -80,7 +81,8 @@ if [ "$oflag" ]; then
     fi
 else
     if [ -d $out_dir ]; then
-        echo "Output directory exists | run overwrite option [-o]"
+        echo "Output directory exists | run overwrite option [-o] to create new set of group-level connectivity maps"
+        echo "Output directory path: $out_dir"
         exit 0
     else
         echo "Creating output directory with path: $out_dir"
@@ -95,9 +97,6 @@ cd $out_dir
 cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
 
 #run setup script
-if [ -f _tmp_roi_list.txt ]; then
-    rm -rf _tmp_roi_list.txt
-fi
 echo " " 2>&1 | tee -a $log_file
 tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
 
@@ -125,13 +124,15 @@ for roi in ${ROI[@]};
         tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
         tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
 
-    #clean up _tmp files
+    #clean up
     rm -rf _tmp*
     rm -rf 3dFWHMx*
     rm -rf MNI*
 
     cd ../
 
+#clean up
+rm -rf _tmp*
 done
 
 
