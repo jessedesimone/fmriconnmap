@@ -27,6 +27,8 @@ set opref    = grp_wb_z
 set ouncf    = ${opref}_"${vname}"_unc_${opvalunc}
 set ocorf    = ${opref}_"${vname}"_fwer_${oathr}
 
+# set delimiter for reading text files
+set delimiter   = ' '
 
 # ------------- Create uncorrected network connectivity maps ---------------
 # creates uncorrected parameter statistic WB z map and cluster mask
@@ -67,18 +69,22 @@ set ocorf    = ${opref}_"${vname}"_fwer_${oathr}
 awk 'NR==2' _tmp_acf_params.txt > _tmp_acf_params_2.txt
 
 # extract acf parameters for input to 3dClustSim
-delimiter=' '
-acf1="$(cut -d "$delimiter" -f 1-2 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
-acf2="$(cut -d "$delimiter" -f 3-4 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
-acf3="$(cut -d "$delimiter" -f 5-6 ${out_dir}/WB_Z_ROI_001_acf_params2.txt)"
-echo "ACF parameters for 3dClustSim: $acf1 $acf2 $acf3" 
+set vacfpar     = `cat _tmp_acf_params_2.txt`
+set vacf1       = $vacfpar[1]
+set vacf2       = $vacfpar[2]
+set vacf3       = $vacfpar[3]
+
+echo "ACF parameters for 3dClustSim: $vacf1 $vacf2 $vacf3" 
 
 # Run 3dClustSim to get the voxel-level cluster threshold
-3dClustSim -mask ${opref}_"${vname}"_unc_${opvalunc}_mask.nii.gz -acf $acf1 $acf2 $acf3 -athr ${oathr} -pthr ${opthr} -prefix "${vname}"_clustim 
-awk 'NR==9' "${vname}"_clustim.1D > "${vname}"_clustsize.txt
-clustsize="$(cut -d "$delimiter" -f 4-5 "${vname}"_clustsize.txt)"
+3dClustSim -mask ${ouncf}_mask.nii.gz -acf $vacf1 $vacf2 $vacf3 -athr ${oathr} -pthr ${opthr} -prefix ${opref}_clustsim 
+awk 'NR==9' ${opref}_clustsim > ${opref}_clustsim_clustsize.txt
+
+set vclust      = `cat ${opref}_clustsize.txt`
+set vclustn     = $vclust[2]
+
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-echo "Corrected cluster size for alpha-level significance = $clustsize"
+echo "Corrected cluster size for alpha-level significance = $vclustn"
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
 # ------------- Create corrected network connectivity maps ---------------
@@ -87,7 +93,7 @@ echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     -ithr 0                             \
     -idat 0                             \
     -NN 3                               \
-    -clust_nvox ${clustsize}            \
+    -clust_nvox ${vclustn}            \
     -1sided RIGHT_TAIL ${opthr}         \
     -pref_map ${ocorf}_mask.nii.gz      \
     -pref_dat ${ocorf}.nii.gz           \
