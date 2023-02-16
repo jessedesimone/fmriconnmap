@@ -7,7 +7,7 @@
 
 # =================================================================
 
-echo "++ Running 05_group_connmap.tcsh to create group-level network connectivity maps for each ROI center"
+echo "++ Running 02_group_connmap.tcsh"
 
 # set the ROI number
 set vname    = `cat _tmp_roiname.txt`

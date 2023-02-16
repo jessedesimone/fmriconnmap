@@ -99,7 +99,7 @@ if [ -f _tmp_roi_list.txt ]; then
     rm -rf _tmp_roi_list.txt
 fi
 echo " " 2>&1 | tee -a $log_file
-tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
+tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
 
 ROI=`cat _tmp_roi_list.txt`
 for roi in ${ROI[@]}; 
@@ -122,8 +122,8 @@ for roi in ${ROI[@]};
 
     cd $roi
         : 'now source tcsh scripts to create group-level connectivity maps'
-        tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
-        tcsh -c ${src_dir}/05_group_connmap.tcsh 2>&1 | tee -a $log_file
+        tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+        tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
 
     #clean up _tmp files
     rm -rf _tmp*

@@ -6,7 +6,7 @@
 
 # =================================================================
 
-echo "++ Running 04_group_WB_mean_maps.tcsh to create WB group-averaged z-score maps for each ROI center"
+echo "++ Running 01_group_WB_mean_maps.tcsh"
 
 #set the ROI number
 set vname    = `cat _tmp_roiname.txt`

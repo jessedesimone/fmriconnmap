@@ -6,7 +6,7 @@
 
 # =================================================================
 
-echo "++ Running 03_group_setup.tcsh for setup"
+echo "++ Running 00_group_setup.tcsh"
 
 # configuration files
 set ilist   = 00_list_of_all_roi_centers_test.txt
