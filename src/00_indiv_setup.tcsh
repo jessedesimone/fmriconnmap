@@ -9,7 +9,7 @@
 # Credit to PA Taylor (NIMH, NIH)
 # =================================================================
 
-echo "++ Running 00_setup.tcsh"
+echo "++ Running 00_indiv_setup.tcsh"
 
 # configuration files
 set vsub    = `cat subname.txt`
@@ -56,5 +56,5 @@ end
 #clean up
 \rm ${tlist}
 
-echo "++ 00_setup.tcsh DONE!"
+echo "++ 00_indiv_setup.tcsh DONE!"
 exit 0

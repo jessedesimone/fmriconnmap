@@ -1,15 +1,16 @@
 # fmriconnmap
-- Create a group-averaged functional connectivity map/mask for specified seed regions-of-interest (ROIs)
+- This package has two primary functions:
+    - Create individual subject-level functional connectivity maps/masks for a specified list of ROI coordinate centers
+    - Create group-level functional connectivity maps/masks using subject-level input files
 - Output files can be used for visual purposes (i.e., visualizing an ROI-based functional network) or statistical purposes (i.e., restricting statistical tests to a masked region)
 
-## instructions
+## Subject-level instructions
 ### Clone git repository 
 - Fork repository to your GitHub account and clone repository to local machine git clone < git@github.com:<username>/afniconnmap.git >
 
-### configure python virtual environment
+### Configure python virtual environment
 - This package includes python source code from afni 
-- matplotlib package is required for 02_netcorr.tcsh
-- driver.sh script will source the local python virtual environment before running scripts
+- matplotlib package is required for 02_indiv_netcorr.tcsh
 - For me, the terminal command is: > source env/bin/activate but yours may differ
 - This is built into the driver.sh script configuration so update as needed
 - The dependencies.sh script will check that matplotlib is installed and will exit if not
@@ -23,9 +24,9 @@
 ### Data setup
 - In the data directory, create a subdirectory for each subject 
 - For each subject add errts.*.anaticor+tlrc (epi error time series) and standard space anatomical image to the respective subdirectory
-- The anatomical file will be used for QC
-- Store MNI template used in the afni_proc.py registration/warping procedure in nifti directory; this is not used either, but nice to have
-- Create subject list using the following command: touch data/id_subj
+- The anatomical file will be used for QC purposes
+- Store MNI template used in the afni_proc.py registration/warping procedure in nifti directory; this will be used for QC purposes during the group-stage
+- Create subject list using the following command: > touch data/id_subj
 - Add each subject's unique identifier to the first column of id_subj
 
 # Create and configure MNI mask file
@@ -33,8 +34,8 @@
 - I used the MNI152_T1_2009c template in afni_proc.py but yours may be different
 - Navigate to the nifti directory and type: > 3dcalc -a <MNI template image> -expr 'step(a)' -prefix <mask file>
 - Resample the mask file to the resolution of the epi (and the ROIs that will be created) by typing > 3dresample -master <epi file> -rmode NN -prefix <mask file resampled> -inset <mask file>
-- Update the naming convention of the mask file in driver.sh line 86
-- The mask file does not need to be used in this pipeline and you can optionally remove by uncommenting the mask option in 3dNetCor (02_netcorr.tcsh)
+- Update the naming convention of the mask file in driver_indiv.sh the default is "MNI152_T1_2009c_mask_r.nii"
+- The mask file does not need to be used in this pipeline and you can optionally remove by uncommenting the mask option in 3dNetCor (02_indiv_netcorr.tcsh); I recommend using it to avoid noise outside of brain tissue
 
 ### ROI configuration
 - Navigate to ROI directory
@@ -43,34 +44,56 @@
 - 00_setup.tcsh will create spherical ROIs using the locations specificies in the 00_list_of_all_roi_centers.txt file
 - Default orientation is LPI
 - Default ROI size radius is 6 mm
+- If your epi/anat files are in a different orientation, update the 3dUndump command in 00_indiv_setup.tcsh
 
-### run 00_setup.tcsh and 01_make_single_roi_map.tcsh
+### Run 00_indiv_setup.tcsh and 01_indiv_roi_map.tcsh
 - Navigate to src directory
 - Type > ./driver.sh -s 
 - Type > ./driver.sh -r 
-- Option to run both concurruently using > ./driver.sh -sr 
+- Option to run both sequentially using > ./driver.sh -sr 
+- Type > ./driver.sh -h for help
 
 ### QC final_roi_map.nii.gz and final_roi_map.niml.lt
+- Navigate to data and individual subject directories
 - final_roi_map.nii.gz should contain the same number of ROIs and match the associated labels in final_roi_map.niml.lt
 - Confirm appropriate size of each ROIs and that the labels are in the correct anatomical locations
-- Individual ROI files labled as roi_mask_*.nii.gz
-- See final_roi_map.*.jpg for example of final_roi_map.nii.gz
+- Individual ROI files are labelled as roi_mask_*.nii.gz
+- See images/final_roi_map.*.jpg for example of final_roi_map.nii.gz
 
-### run 02netcorr.tcsh 
+### Run 02_indiv_netcorr.tcsh 
 - Navigate to src directory
 - Type > ./driver.sh -n 
-- Option to run concurruently with setup and roi_map scripts < ./driver.sh -srn >
+- Option to run sequentially with setup and roi_map scripts > ./driver.sh -srn
+- Type > ./driver.sh -h for help
 
 ### QC NetCorr output files
 - Output files
+    - data/$sub/NETCORR_000_INDIV/: sub-directory that holds the whole brain correlation maps of each ROI’s average time series; there are also images of those volumes stored there.
     - NETCORR_000.netcc: matrices of properties of the network of ROIs: Pearson correlation coefficient (CC) and its Fisher-Z transform (FZ)
     - NETCORR_000_netcc_FZ.jpg: an image of the Fisher-Z transform (FZ) matrix
     - NETCORR_000.netts: text file containing the mean time series of each ROI
     - NETCORR_000.roidat: text file containing info of “how full” each ROI is– basically, a way to check if masking or other processing steps might have left null time series in any ROI mask.
-    - NETCORR_000_INDIV/: sub-directory that holds the whole brain correlation maps of each ROI’s average time series; there are also images of those volumes stored there.
     - WB_Z_ROI*.jpg: sets of images of the WB correlation maps of each ROI. Each ROI has 3 images (axi, cor and sag viewplanes), and there is also a “*_pbar.jpg” file of the colorbar used, and “*_pbar.txt” file that records the colorbar min, max and (optional) threshold value used.
 
+## Group-level instructions
 
+### Specify uncorrected and corrected p-values in 02_group_connmap.tcsh
+- These values will be used for statistical and cluster level thresholding; see 3dClustSim AFNI page for information on athr and pthr
+    - set opvalunc (uncorrected p-value); default = 0.01
+    - set oathr (corrected alpha-level threshold); default = 0.01
+    - set opthr (uncorrected per voxel p-values); default = 0.001
+
+
+### Run driver
+- Navigate to the src directory
+- Type > ./driver_group.sh
+- Script will create output directory and subdirectory for each ROI coordinate center used in the individual processing
+- Output files:
+    - grp_wb_z_0_${roi}_mean.nii.gz: wb z-score map averaged across subjects for a given ROI
+    - grp_wb_z_1_${roi}_pos_mask.nii.gz: binary mask of positive-only values from wb z-score map averaged across subjects for a given ROI
+    - grp_wb_z_2_${roi}_mean_pos.nii.gz: product of grp_wb_z_0_${roi}_mean.nii.gz and grp_wb_z_1_${roi}_pos_mask.nii.gz (positive WB z-score correlation map - anticorrelated voxels removed)
+    - grp_wb_z_${roi}_unc_0.01.nii.gz: grp_wb_z_2_${roi}_mean_pos.nii.gz thresholded at ${opvalunc} uncorrected; default is 0.01
+    - grp_wb_z_${roi}_unc_0.01_mask.nii.gz: binary mask file of grp_wb_z_${roi}_unc_0.01.nii.gz
 
 
 

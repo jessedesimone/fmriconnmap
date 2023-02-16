@@ -10,7 +10,7 @@
 # Credit to PA Taylor (NIMH, NIH)
 # =================================================================
 
-echo "++ Running 01_make_single_roi_map.tcsh"
+echo "++ Running 01_indiv_roi_map.tcsh"
 
 # configuration
 set vsub    = `cat subname.txt`
@@ -108,5 +108,5 @@ endif
 
 \rm ${tpref}*
 
-echo "++ 01_make_single_roi_map.tcsh DONE!"
+echo "++ 01_indiv_roi_map.tcsh DONE!"
 exit 0

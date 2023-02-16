@@ -7,6 +7,6 @@ src_dir=${pkg_dir}/src                                  #source code directory
 log_dir=${pkg_dir}/logs; mkdir -p $log_dir              #log directory
 roi_dir=${pkg_dir}/roi                                  #roi directory
 nii_dir=${pkg_dir}/nifti                                #nifti directory
-out_dir=${pkg_dir}/output; mkdir -p $out_dir            #output directory
+out_dir=${pkg_dir}/output                               #output directory
 
 

@@ -9,7 +9,7 @@
 # Credit to PA Taylor (NIMH, NIH)
 # =================================================================
 
-echo "++ Running 02_netcorr.tcsh"
+echo "++ Running 02_indiv_netcorr.tcsh"
 
 # configuration
 set vsub    = `cat subname.txt`
@@ -78,5 +78,5 @@ end
 
 cd ../
 
-echo "++ 02_netcorr.tcsh DONE!"
+echo "++ 02_indiv_netcorr.tcsh DONE!"
 exit 0
