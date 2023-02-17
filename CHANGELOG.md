@@ -8,8 +8,9 @@ Date: Feb 2023
 Author: J DeSimone
 url="https://github.com/jessedesimone/fmriconnmap"
 
-## [0.0.2] - 2023-02-17
-- improved driver functionality
+## [0.0.3] - 2023-02-17
+- improved driver_group.sh functionality
+- automated creation of mask in driver_indiv.sh
 
 ## [0.0.2] - 2023-02-15
 - passing

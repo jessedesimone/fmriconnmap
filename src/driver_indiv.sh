@@ -89,7 +89,19 @@ ilabtxt=${roi_dir}/00_input_keys_values_test.txt
 
 #define anatomical file
 anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
-anat_mask=${nii_dir}/MNI152_T1_2009c_mask_r.nii
+
+#create anat mask file
+if [ ! -f ${nii_dir}/anat_mask.nii ]; then
+    : 'create mask if it does not already exist'
+    echo "++ creating mask of anatomical template" 2>&1 | tee -a $log_file
+    : 'mask the anatomical template'
+    3dcalc -a ${anat_template} -expr 'step(a)' -prefix ${nii_dir}/anat_mask0.nii
+    : 'find the errts input file for the first subject and resample to epi dimensions'
+    firstsub=$(head -n 1 ${data_dir}/id_subj)
+    3dresample -master ${data_dir}/$firstsub/errts.${firstsub}.anaticor+tlrc -rmode NN -prefix ${nii_dir}/anat_mask.nii -inset ${nii_dir}/anat_mask0.nii
+    rm -rf ${nii_dir}/anat_mask0.nii
+fi
+anat_mask=${nii_dir}/anat_mask.nii
 
 for sub in ${SUB[@]}
 do

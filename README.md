@@ -1,9 +1,11 @@
 # fmriconnmap
+
+## Functions
 ### Function 1 - Create subject-level seed-based functional connectivity maps
 - Create individual subject-level functional connectivity z-score maps/masks for a specified list of ROI coordinate centers
 - These files can later be used for second-level (group-wise) analyses (e.g., ttest, anova, etc.)
 
-## Function 2 - Create an group-level seed-based connectivity map/mask using subject-level z-score maps 
+### Function 2 - Create an group-level seed-based connectivity map/mask using subject-level z-score maps 
 - Create group functional connectivity maps/masks using the average of the z-score individual subject-level z-score maps
 - This can be used for visual purposes (i.e., QC the functional network associated with a given ROI) or statistical purposes (i.e., restricting statistical tests to a masked region)
 - This feature creates a FWER-corrected group-level map/mask based on the cluster-size threshold for a given voxel-wise p-value (0.001) and alpha-level threshold (0.01); see 3dClustSim in AFNI for more details.
@@ -32,14 +34,6 @@
 - Store MNI template used in the afni_proc.py registration/warping procedure in nifti directory; this will be used for QC purposes during the group-stage
 - Create subject list using the following command: > touch data/id_subj
 - Add each subject's unique identifier to the first column of id_subj
-
-### Create and configure MNI mask file
-- Create a mask of the anatomical template used during data preprocessing and store in nifti directory
-- I used the MNI152_T1_2009c template in afni_proc.py but yours may be different
-- Navigate to the nifti directory and type: > 3dcalc -a *MNI template image* -expr 'step(a)' -prefix *mask file*
-- Resample the mask file to the resolution of the epi (and the ROIs that will be created) by typing > 3dresample -master *epi file* -rmode NN -prefix *mask file resampled* -inset *mask file*
-- Update the naming convention of the mask file in driver_indiv.sh the default is "MNI152_T1_2009c_mask_r.nii"
-- The mask file does not need to be used in this pipeline and you can optionally remove by commenting out the mask option in 3dNetCorr (02_indiv_netcorr.tcsh); I recommend using it to avoid noise outside of brain tissue
 
 ### ROI configuration
 - Navigate to ROI directory

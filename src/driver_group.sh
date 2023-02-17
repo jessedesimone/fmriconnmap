@@ -79,6 +79,7 @@ awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 
 # define roi coordinate files
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
+ilist2=${roi_dir}/00_input_keys_values_test.txt
 
 # define anat template
 anat_template=MNI152_T1_2009c+tlrc
@@ -95,9 +96,20 @@ else
     mkdir $out_dir
 fi
 
-# copy required files to outdir
-if [ ! -f ${out_dir}/00_list_of_all_roi_centers_test.txt ]; then
+# copy required coordinate file to outdir
+if [ ! -f ${out_dir}/roi_centers.txt ]; then
     cp $ilist ${out_dir}/roi_centers.txt
+else
+    rm -rf ${out_dir}/roi_centers.txt
+    cp $ilist ${out_dir}/roi_centers.txt
+fi
+
+# copy roi labels too to help with QC
+if [ ! -f ${out_dir}/roi_labs.txt ]; then
+    cp $ilist2 ${out_dir}/roi_labs.txt
+else
+    rm -rf ${out_dir}/roi_labs.txt
+    cp $ilist2 ${out_dir}/roi_labs.txt
 fi
 
 # navigate to outdir
@@ -174,15 +186,18 @@ if [ "$cflag" ]; then
             fi
         fi
 
-        cd ../
-
         # clean up
-        #rm -rf _tmp*
-        #rm -rf MNI*
-        #rm -rf 3dFWHMx*
+        rm -rf _tmp*
+        rm -rf MNI*
+        rm -rf 3dFWHMx*
+
+        cd ../
 
     done
 fi
+# clean up
+rm -rf _tmp*
+exit 0
 
 
 
