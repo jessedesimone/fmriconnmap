@@ -9,7 +9,7 @@
 echo "++ Running 00_group_setup.tcsh"
 
 # configuration files
-set ilist   = 00_list_of_all_roi_centers_test.txt
+set ilist   = roi_centers.txt
 
 # define outputs/temp files
 set tlist   = _tmp_roi_list.txt

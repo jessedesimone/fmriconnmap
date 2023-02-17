@@ -97,7 +97,7 @@ fi
 
 # copy required files to outdir
 if [ ! -f ${out_dir}/00_list_of_all_roi_centers_test.txt ]; then
-    cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
+    cp $ilist ${out_dir}/roi_centers.txt
 fi
 
 # navigate to outdir
