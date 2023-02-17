@@ -18,24 +18,23 @@ set iname    = ${ipref}_2_"${vname}"_mean_pos.nii.gz
 set ianat    = MNI152_T1_2009c+tlrc
 
 # set uncorrected and corrected p-values
-set opvalunc = 0.01    #uncorrected p-value
+set opvalunc = 0.05    #uncorrected p-value
 
 # set outfile names
 set opref    = grp_wb_z
 set ouncf    = ${opref}_"${vname}"_unc
-set ocorf    = ${opref}_"${vname}"_fwer
 
 # ------------- Create uncorrected network connectivity maps ---------------
 # creates uncorrected parameter statistic WB z map and cluster mask
 # also provides text output of cluster report
-3dClusterize                            \
-    -inset ${iname}                     \
-    -ithr 0                             \
-    -idat 0                             \
-    -NN 1                               \
-    -1sided RIGHT_TAIL p=${opvalunc}    \
-    -pref_map ${ouncf}_mask.nii.gz      \
-    -pref_dat ${ouncf}.nii.gz           \
+3dClusterize                                \
+    -inset ${iname}                         \
+    -ithr 0                                 \
+    -idat 0                                 \
+    -NN 1                                   \
+    -1sided RIGHT_TAIL p=${opvalunc}        \
+    -pref_map ${ouncf}_mask.nii.gz          \
+    -pref_dat ${ouncf}.nii.gz               \
     -abs_table_data > ${ouncf}.txt
 
 

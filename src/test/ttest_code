@@ -1,0 +1,18 @@
+# perform one-sample ttest on input data
+            if [ ! -f cmd_${roi} ]; then
+                touch cmd_${roi}
+            fi
+
+            if [ -f grp_wb_z_${roi}_onesamp.nii ]; then
+                echo "++ 3dttest++ already run" 2>&1 | tee -a $log_file
+            else
+                echo "#!/bin/tcsh" > cmd_${roi}
+                echo "3dttest++     \\" >> cmd_${roi}
+                echo "-prefix grp_wb_z_${roi}_onesamp.nii      \\" >> cmd_${roi}
+                echo "-setA ${roi}    \\" >> cmd_${roi}
+                for sub in ${SUB[@]}
+                do
+                    echo " $sub '_tmp_${sub}_wb_z_roi_${roi}.nii.gz[PearCorr#0]'	\\" >> cmd_${roi}
+                done
+                tcsh -xef cmd_${roi}
+            fi

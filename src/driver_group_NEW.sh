@@ -162,46 +162,19 @@ if [ "$cflag" ]; then
         echo "++ creating group-level connmap for ROI${roi}" 2>&1 | tee -a $log_file
         cd $roi
 
-        if [ ! -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
-            echo "++ no infile to create connmap" 2>&1 | tee -a $log_file
+        #create uncorrected group-level connectivity map
+        if [ ! -f grp_wb_z_1_${roi}_pos_mask.nii.gz ]; then
+            echo "++ no mask to create connmap" 2>&1 | tee -a $log_file
             echo "++ must run [-m] option first" 2>&1 | tee -a $log_file
         else
-            if [ ! -f grp_wb_z_${roi}_fwer.nii.gz ]; then
-                tcsh -c ${src_dir}/02_group_connmap_NEW.tcsh 2>&1 | tee -a $log_file
-            else
-                echo "++ group-level connmap for ROI${roi} already exists" 2>&1 | tee -a $log_file
-            fi
+            echo "++ creating network connectivity map | uncorrected " 2>&1 | tee -a $log_file
+            tcsh -c ${src_dir}/02_group_connmap_unc.tcsh 2>&1 | tee -a $log_file
         fi
 
+        #now run 3dttest with clustsim to get correct cluster size information
+        #then run 03_group_connmap_fwer using that cluster size information
 
 
-        # creating 3dttest file for 3dClustSim simulation
-        if [ ! -f cmd_${roi} ]; then
-            touch cmd_${roi}
-        else
-            rm -rf cmd_${roi}
-            touch cmd_${roi}
-        fi        
-        echo "#!/bin/tcsh" > cmd_${roi}
-        echo "3dttest++     \\" >> cmd_${roi}
-        echo "-prefix ttest_${roi}\\" >> cmd_${roi}
-
-        -Clustsim - mask
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-        
-        
         cd ../
 
         # clean up
