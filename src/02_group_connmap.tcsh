@@ -24,8 +24,8 @@ set opthr    = 0.001    #uncorrected (per voxel) p-values
 
 # set outfile names
 set opref    = grp_wb_z
-set ouncf    = ${opref}_"${vname}"_unc_${opvalunc}
-set ocorf    = ${opref}_"${vname}"_fwer_${oathr}
+set ouncf    = ${opref}_"${vname}"_unc
+set ocorf    = ${opref}_"${vname}"_fwer
 
 # ------------- Create uncorrected network connectivity maps ---------------
 # creates uncorrected parameter statistic WB z map and cluster mask

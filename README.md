@@ -77,6 +77,10 @@
 
 ## Group-level instructions
 
+### Update ROI coordinate file in diver_group.sh
+- The driver will use the dimensions from the roi/00_list_of_all_roi_centers.txt to determine the number of group-level maps to calculate
+- This needs to be the very same file that you used to create the individual maps, or else the group-level map numbers will not correspond to the subject-level map numbers
+
 ### Specify uncorrected and corrected p-values in 02_group_connmap.tcsh
 - These values will be used for statistical and cluster level thresholding; see 3dClustSim AFNI page for information on athr and pthr
     - set opvalunc (uncorrected p-value); default = 0.01
