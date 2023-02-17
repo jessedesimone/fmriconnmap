@@ -5,148 +5,184 @@ cat ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver_group.sh | [-o] [-h]
-    Optional arguments:
-    -h  help
-    -o  overwrite existing output directory
+    Usage: ./driver_group.sh [-s] [-m] [-c] | [-h]
+    Required arguments (at least 1 of):
+    -s      run setup
+    -m      create group-averaged z-score maps (uncorrected)
+    -c      create group-level connectivity map (corrected)
+
+    Option arguments:
+    -h      help
 
     "
-    while getopts ":ho" opt; do
+    while getopts ":hsmc" opt; do
         case ${opt} in
                 h|\?) #help option
                     echo "$gen_error_msg"
                     exit 1
                     ;;
-                o) #overwrite
-                    oflag=1
+                s) #setup
+                    sflag=1
+                    ;;
+                m) #mean z-score maps
+                    mflag=1
+                    ;;
+                c) #group-level connmap
+                    cflag=1
                     ;;
         esac
     done
+    if [ $OPTIND -eq 1 ]; then 
+        echo "++ driver.sh requires argument"
+        echo "$gen_error_msg"
+        exit 1
+        fi
     shift $((OPTIND -1))
 
 #==========configuration==========
+echo " "
 echo "DRIVER.SH STARTED"
 
-#set datetime
+# set datetime
 : 'used for datetime stamp log files'
 dt=$(date "+%Y.%m.%d.%H.%M.%S")
 
-#set directories
+# set directories
 : 'call directories.sh'
 source config_directories.sh
 
-#enable extended globbing
+# enable extended globbing
 : 'enables pattern matching for removing files with overwrite option'
 shopt -s extglob
 
-#check dependencies
+# check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
 source dependencies.sh
 
-#set the python virtual environment
+# set the python virtual environment
 : 'depends on system | may not be needed'
 source ~/env/bin/activate
 
-#create log file
+# create log file
 : 'log file will capture terminal output each time driver is run
 can be used to check for and troubleshoot errors'
 log_file=${log_dir}/log_fmriconnmap_group.${dt}
 touch $log_file
-echo "Start time: $dt" 2>&1 | tee $log_file
-echo "++ Creating group-level connectivity maps" 2>&1 | tee -a $log_file
+echo "start time: $dt" 2>&1 | tee $log_file
+echo "++ creating group-level connectivity maps" 2>&1 | tee -a $log_file
 
-#define subjects
+# define subjects
 SUB=`cat ${data_dir}/id_subj`
 echo "number of subjects in analysis" 2>&1 | tee -a $log_file
 awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 
-#define roi coordinate files
+# define roi coordinate files
 ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
 
-#define anat template
-anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
+# define anat template
+anat_template=MNI152_T1_2009c+tlrc
 
-#==========handle options==========
-if [ "$oflag" ]; then
-    echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
-    if [ -d $out_dir ]; then
-        echo "Output directory exists | !!! OVERWRITING OUTPUT DIRECTORY !!!" 2>&1 | tee -a $log_file
-        echo "Output directory path: $out_dir" 2>&1 | tee -a $log_file
-        rm -rf $out_dir
-        mkdir $out_dir
-    else
-        echo "Creating output directory with path: $out_dir" 2>&1 | tee -a $log_file
-        mkdir -p $out_dir
-    fi
+# check if outdir exists or create
+if [ -d $out_dir ]; then 
+    echo "++ output directory already exists" 2>&1 | tee -a $log_file
+    echo "++ consider moving to backup directory or remove" 2>&1 | tee -a $log_file
+    echo "pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+    sleep 0
+
 else
-    if [ -d $out_dir ]; then
-        echo "Output directory exists | run overwrite option [-o] to create new set of group-level connectivity maps" 2>&1 | tee -a $log_file
-        echo "You should create a backup of the current output directory" 2>&1 | tee -a $log_file
-        echo "Output directory path: $out_dir" 2>&1 | tee -a $log_file
-        exit 0
-    else
-        echo "Creating output directory with path: $out_dir" 2>&1 | tee -a $log_file
-        mkdir -p $out_dir
-    fi
+    echo "++ creating output directory" 2>&1 | tee -a $log_file
+    mkdir $out_dir
 fi
+
+# copy required files to outdir
+if [ ! -f ${out_dir}/00_list_of_all_roi_centers_test.txt ]; then
+    cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
+fi
+
+# navigate to outdir
 cd $out_dir
 
+#==========handle options==========
 #==========setup==========
-
-#copy required files to outdir
-cp $ilist ${out_dir}/00_list_of_all_roi_centers_test.txt
-
-#run setup script
-echo " " 2>&1 | tee -a $log_file
-tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
-
-ROI=`cat _tmp_roi_list.txt`
-for roi in ${ROI[@]}; 
-    do
+# run setup if selected
+if [ "$sflag" ]; then
     echo " " 2>&1 | tee -a $log_file
-    echo "++++++++++++" 2>&1 | tee -a $log_file
-    echo "++ Creating group-level connectivity map for ROI $roi" 2>&1 | tee -a $log_file
-    mkdir -p $roi
+    echo "++ setup option selected" 2>&1 | tee -a $log_file
+    tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
+fi
 
-    3dcopy ${anat_template} $roi/
-
-    : 'copy individual z maps for creation of group level maps'
-    echo "++ copying individual subject z maps" 2>&1 | tee -a $log_file
-    for sub in ${SUB[@]}
-    do
-        cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_WB_Z_ROI_${roi}.nii.gz
+# create roi directories
+if [ ! -f _tmp_roi_list.txt ]; then
+    echo "++ no setup file found" 2>&1 | tee -a $log_file
+    echo "++ must run [-s] option first " 2>&1 | tee -a $log_file
+    exit 1
+else
+    ROI=`cat _tmp_roi_list.txt`
+    for roi in ${ROI[@]}
+    do 
+        mkdir -p $roi
+        if [ ! -f $roi/${anat_template}.HEAD ]; then
+            echo "coping anatomical template files" 2>&1 | tee -a $log_file
+            3dcopy ${nii_dir}/${anat_template} $roi/
+        fi
     done
-
-    echo $roi > ${roi}/_tmp_roiname.txt
-
-    cd $roi
-        : 'now source tcsh scripts to create group-level connectivity maps'
-        echo "++ averaging subject-level z-score maps" 2>&1 | tee -a $log_file
-        if [ -f grp_wb_z_2_001_mean_pos.nii.gz ]; then
+fi
+#==========group mean z-score maps==========
+if [ "$mflag" ]; then
+    for roi in ${ROI[@]}
+    do
+        echo "++ creating group-averaged z-score map ROI${roi}" 2>&1 | tee -a $log_file
+        echo $roi > ${roi}/_tmp_roiname.txt
+        
+        # copy infiles
+        for sub in ${SUB[@]}
+        do
+            cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_wb_z_roi_${roi}.nii.gz
+        done
+        
+        # enter roi directory
+        cd $roi
+        if [ -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
+        : 'if outfile exists do not run'
             echo "++ outfile already created for ROI${roi}"
         else
+            : 'run if outfile does not exist'
             tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
         fi
-        echo "++ creating group-level connectivity map" 2>&1 | tee -a $log_file
-        if [ -f grp_wb_z_${roi}_fwer.nii.gz ]; then
-            echo "++ outfile already exists" 2>&1 | tee -a $log_file
+
+        cd ../
+    done
+fi
+
+#==========group-level connectivity maps==========
+if [ "$cflag" ]; then
+    for roi in ${ROI[@]}
+    do
+        echo "++ creating group-averaged connmap for ROI${roi}" 2>&1 | tee -a $log_file
+        cd $roi
+
+        #create uncorrected group-level connectivity map
+        if [ ! -f grp_wb_z_1_${roi}_pos_mask.nii.gz ]; then
+            echo "++ no mask to create connmap" 2>&1 | tee -a $log_file
+            echo "++ must run [-m] option first" 2>&1 | tee -a $log_file
         else
-            #tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
+            if [ ! -f grp_wb_z_${roi}_fwer.nii.gz ]; then
+                tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
+            else 
+                echo "++ group-averaged connmap already exists" 2>&1 | tee -a $log_file
+            fi
         fi
 
-    #clean up
-    #rm -rf _tmp*
-    rm -rf 3dFWHMx*
-    #rm -rf MNI*
+        cd ../
 
-    cd ../
+        # clean up
+        #rm -rf _tmp*
+        #rm -rf MNI*
+        #rm -rf 3dFWHMx*
 
-#clean up
-#rm -rf _tmp*
-done
-
-
+    done
+fi
 
 
 

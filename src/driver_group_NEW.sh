@@ -159,7 +159,7 @@ fi
 if [ "$cflag" ]; then
     for roi in ${ROI[@]}
     do
-        echo "++ creating group-level connmap for ROI${roi}" 2>&1 | tee -a $log_file
+        echo "++ creating group-averaged connmap for ROI${roi}" 2>&1 | tee -a $log_file
         cd $roi
 
         #create uncorrected group-level connectivity map
@@ -167,12 +167,12 @@ if [ "$cflag" ]; then
             echo "++ no mask to create connmap" 2>&1 | tee -a $log_file
             echo "++ must run [-m] option first" 2>&1 | tee -a $log_file
         else
-            echo "++ creating network connectivity map | uncorrected " 2>&1 | tee -a $log_file
-            tcsh -c ${src_dir}/02_group_connmap_unc.tcsh 2>&1 | tee -a $log_file
+            if [ ! -f grp_wb_z_${roi}_fwer.nii.gz ]; then
+                tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
+            else 
+                echo "++ group-averaged connmap already exists" 2>&1 | tee -a $log_file
+            fi
         fi
-
-        #now run 3dttest with clustsim to get correct cluster size information | need more subjects to test this
-        #then run 03_group_connmap_fwer using that cluster size information
 
         cd ../
 

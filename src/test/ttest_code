@@ -12,7 +12,7 @@
                 echo "-setA ${roi}    \\" >> cmd_${roi}
                 for sub in ${SUB[@]}
                 do
-                    echo " $sub '_tmp_${sub}_wb_z_roi_${roi}.nii.gz[PearCorr#0]'	\\" >> cmd_${roi}
+                    echo " $sub _tmp_${sub}_wb_z_roi_${roi}.nii.gz[PearCorr#0]	\\" >> cmd_${roi}
                 done
                 tcsh -xef cmd_${roi}
             fi
