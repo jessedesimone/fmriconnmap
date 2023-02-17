@@ -171,9 +171,8 @@ if [ "$cflag" ]; then
             tcsh -c ${src_dir}/02_group_connmap_unc.tcsh 2>&1 | tee -a $log_file
         fi
 
-        #now run 3dttest with clustsim to get correct cluster size information
+        #now run 3dttest with clustsim to get correct cluster size information | need more subjects to test this
         #then run 03_group_connmap_fwer using that cluster size information
-
 
         cd ../
 
