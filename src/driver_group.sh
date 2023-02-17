@@ -5,7 +5,7 @@ cat ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver_group.sh [-o] [-h]
+    Usage: ./driver_group.sh | [-o] [-h]
     Optional arguments:
     -h  help
     -o  overwrite existing output directory
@@ -71,21 +71,22 @@ anat_template=${nii_dir}/MNI152_T1_2009c+tlrc
 if [ "$oflag" ]; then
     echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
     if [ -d $out_dir ]; then
-        echo "Output directory exists | !!! OVERWRITING OUTPUT DIRECTORY !!!"
-        echo "Output directory path: $out_dir"
+        echo "Output directory exists | !!! OVERWRITING OUTPUT DIRECTORY !!!" 2>&1 | tee -a $log_file
+        echo "Output directory path: $out_dir" 2>&1 | tee -a $log_file
         rm -rf $out_dir
         mkdir $out_dir
     else
-        echo "Creating output directory with path: $out_dir"
+        echo "Creating output directory with path: $out_dir" 2>&1 | tee -a $log_file
         mkdir -p $out_dir
     fi
 else
     if [ -d $out_dir ]; then
-        echo "Output directory exists | run overwrite option [-o] to create new set of group-level connectivity maps"
-        echo "Output directory path: $out_dir"
+        echo "Output directory exists | run overwrite option [-o] to create new set of group-level connectivity maps" 2>&1 | tee -a $log_file
+        echo "You should create a backup of the current output directory" 2>&1 | tee -a $log_file
+        echo "Output directory path: $out_dir" 2>&1 | tee -a $log_file
         exit 0
     else
-        echo "Creating output directory with path: $out_dir"
+        echo "Creating output directory with path: $out_dir" 2>&1 | tee -a $log_file
         mkdir -p $out_dir
     fi
 fi
@@ -121,18 +122,28 @@ for roi in ${ROI[@]};
 
     cd $roi
         : 'now source tcsh scripts to create group-level connectivity maps'
-        tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
-        tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
+        echo "++ averaging subject-level z-score maps" 2>&1 | tee -a $log_file
+        if [ -f grp_wb_z_2_001_mean_pos.nii.gz ]; then
+            echo "++ outfile already created for ROI${roi}"
+        else
+            tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+        fi
+        echo "++ creating group-level connectivity map" 2>&1 | tee -a $log_file
+        if [ -f grp_wb_z_${roi}_fwer.nii.gz ]; then
+            echo "++ outfile already exists" 2>&1 | tee -a $log_file
+        else
+            #tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
+        fi
 
     #clean up
-    rm -rf _tmp*
+    #rm -rf _tmp*
     rm -rf 3dFWHMx*
-    rm -rf MNI*
+    #rm -rf MNI*
 
     cd ../
 
 #clean up
-rm -rf _tmp*
+#rm -rf _tmp*
 done
 
 

@@ -12,7 +12,7 @@ echo "++ Running 01_group_WB_mean_maps.tcsh"
 set vname    = `cat _tmp_roiname.txt`
 
 # Set naming for individual z-score map files to be combined
-set izmaps   = _tmp_*_WB_Z_ROI_"${vname}".nii.gz
+set izmaps   = _tmp_*_wb_z_roi_"${vname}".nii.gz
 
 # set outfile names
 set opref    = grp_wb_z
