@@ -1,8 +1,12 @@
 # fmriconnmap
 - This package has two primary functions:
-    - Create individual subject-level functional connectivity maps/masks for a specified list of ROI coordinate centers
-    - Create group-level functional connectivity maps/masks using subject-level input files
-- Output files can be used for visual purposes (i.e., visualizing an ROI-based functional network) or statistical purposes (i.e., restricting statistical tests to a masked region)
+### Function 1
+- Create individual subject-level functional connectivity z-score maps/masks for a specified list of ROI coordinate centers
+- These files can later be used for second-level group analyses on the associated parameter statistic maps
+## Function 2
+- Create group functional connectivity maps/masks using the average of the z-score individual subject-level z-score maps
+- This can be used for visual purposes or statistical purposes (i.e., restricting statistical tests to a masked region wher you are most likely to find effects)
+- This feature creates an uncorrected map/mask thresholded at 0.01 and uses 3dClustSim computes a cluster-size threshold for a given voxel-wise p-value threshold, such that the probability of anything surviving the dual thresholds is at some given level (specified by the '-athr' option)
 
 ## Subject-level instructions
 ### Clone git repository 
@@ -78,9 +82,9 @@
 ## Group-level instructions
 
 ### Update ROI coordinate file in diver_group.sh
-- The driver will use the dimensions from the roi/00_list_of_all_roi_centers.txt to determine the number of group-level maps to calculate
+- The driver will use the dimensions from the roi/00_list_of_all_roi_centers.txt to determine the number of group-level maps to create
 - This needs to be the very same file that you used to create the individual maps, or else the group-level map numbers will not correspond to the subject-level map numbers
-- This file is defined in the driver and 00_group_setup.tcsh so needs to be updated in both locations
+- This file is defined in the driver_group.sh and 00_group_setup.tcsh so needs to be updated in both locations
 
 ### Specify uncorrected and corrected p-values in 02_group_connmap.tcsh
 - These values will be used for statistical and cluster level thresholding; see 3dClustSim AFNI page for information on athr and pthr
