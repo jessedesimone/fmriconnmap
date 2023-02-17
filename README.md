@@ -6,7 +6,7 @@
 ## Function 2
 - Create group functional connectivity maps/masks using the average of the z-score individual subject-level z-score maps
 - This can be used for visual purposes or statistical purposes (i.e., restricting statistical tests to a masked region wher you are most likely to find effects)
-- This feature creates an uncorrected map/mask thresholded at 0.01 and uses 3dClustSim computes a cluster-size threshold for a given voxel-wise p-value threshold, such that the probability of anything surviving the dual thresholds is at some given level (specified by the '-athr' option)
+- This feature creates an uncorrected map/mask thresholded at 0.01 and uses 3dClustSim to compute a cluster-size threshold for a given voxel-wise p-value threshold (0.001) and alpha-level threshold of fwer=0.01
 
 ## Subject-level instructions
 ### Clone git repository 

@@ -8,6 +8,7 @@
             else
                 echo "#!/bin/tcsh" > cmd_${roi}
                 echo "3dttest++     \\" >> cmd_${roi}
+                -mask 
                 echo "-prefix grp_wb_z_${roi}_onesamp.nii      \\" >> cmd_${roi}
                 echo "-setA ${roi}    \\" >> cmd_${roi}
                 for sub in ${SUB[@]}
