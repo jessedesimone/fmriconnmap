@@ -124,6 +124,9 @@ do
     if [ "$oflag" ]; then
         echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
         echo "++ !! OVERWRITING OUTPUT DIRECTORY !!" 2>&1 | tee -a $log_file
+        echo "++ Cancel now before you *regert* it > ^c"
+        echo "pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+        sleep 10
         rm -v !(*+tlrc.*)
         rm -rf NETCORR_000_INDIV
     fi
@@ -149,7 +152,7 @@ do
         if [ "$rflag" ]; then
             : 'run 01_indiv_roi_map.tcsh'
             echo " " 2>&1 | tee -a $log_file
-            echo "++ make single ROI map option selected" 2>&1 | tee -a $log_file
+            echo "++ single ROI map option selected" 2>&1 | tee -a $log_file
             : 'run script if outfile does not exist '
             outfile=final_roi_map.nii.gz
             if [ ! -f $outfile ]; then

@@ -89,7 +89,7 @@ if [ -d $out_dir ]; then
     echo "++ output directory already exists" 2>&1 | tee -a $log_file
     echo "++ consider moving to backup directory or remove" 2>&1 | tee -a $log_file
     echo "pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
-    sleep 0
+    sleep 10
 
 else
     echo "++ creating output directory" 2>&1 | tee -a $log_file
