@@ -7,9 +7,9 @@ gen_error_msg="\
 
     Usage: ./driver_indiv.sh [-s] [-r] [-n] | [-o] | [-h]
     Required arguments:
-    -s  setup individual
-    -r  roi map individual
-    -n  netcorr individual
+    -s  run setup
+    -r  create roi map for all roi coordinate centers
+    -n  create wb z-score maps for each roi coordinate center
 
     Optional arguments:
     -h  help
