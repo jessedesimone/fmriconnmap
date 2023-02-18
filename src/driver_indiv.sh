@@ -5,7 +5,7 @@ cat ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver_indiv.sh [-s] [-r] [-n] | [-o] | [-h]
+    Usage: ./driver_indiv.sh [-s] [-r] [-n] | [-o] [-h]
     Required arguments:
     -s  run setup
     -r  create roi map for all roi coordinate centers
@@ -122,10 +122,10 @@ do
     cd $data_dir/$sub
     #==========handle options==========
     if [ "$oflag" ]; then
-        echo "++ Overwrite option selected" 2>&1 | tee -a $log_file
+        echo "++ overwrite option selected" 2>&1 | tee -a $log_file
+        echo "++ cancel now before you *regert* it > ^c" | tee -a $log_file
+        echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
         echo "++ !! OVERWRITING OUTPUT DIRECTORY !!" 2>&1 | tee -a $log_file
-        echo "++ Cancel now before you *regert* it > ^c"
-        echo "pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
         sleep 10
         rm -v !(*+tlrc.*)
         rm -rf NETCORR_000_INDIV
@@ -175,6 +175,7 @@ do
                 fi
             fi
         fi
+        
         #==========create correlation map==========
         if [ "$nflag" ]; then
             : 'run 02_indiv_netcorr.tcsh'
