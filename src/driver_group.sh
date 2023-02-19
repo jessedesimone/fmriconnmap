@@ -1,21 +1,27 @@
 #!/bin/sh
 : 'Driver to create group-level functional connectivity maps for a specified list of ROI centers'
 
-cat ../CHANGELOG.md
+head -9 ../CHANGELOG.md
 
 gen_error_msg="\
 
-    Usage: ./driver_group.sh [-s] [-m] [-c] | [-h]
+    Usage: ./driver_group.sh [-s] [-m] [-c] | [-o <string>] [-h]
     Required arguments (at least 1 of):
     -s      run setup
     -m      create group-averaged z-score maps (uncorrected)
     -c      create group-level connectivity map (corrected)
 
     Option arguments:
+    -o      specify output subdirectory name
     -h      help
 
+    Notes:
+    - -smc options must be run sequentially; that is, -m is dependent on -s output and -c is dependent on -m output
+    - if -o option is not specified, the results will be stored in output directory
+    - if -o option is specified, the results will be stored in output/<-o string>
+
     "
-    while getopts ":hsmc" opt; do
+    while getopts ":hsmco:" opt; do
         case ${opt} in
                 h|\?) #help option
                     echo "$gen_error_msg"
@@ -30,10 +36,19 @@ gen_error_msg="\
                 c) #group-level connmap
                     cflag=1
                     ;;
+                o) #specify output directory name
+                    oflag=${OPTARG}
+                    echo "oflag is ${OPTARG}"
+                    ;;
+                :) #expected argument omitted:
+                    echo "Error: -${OPTARG} requires an argument"
+                    echo "$gen_error_msg"
+                    exit 1
+                    ;;
         esac
     done
     if [ $OPTIND -eq 1 ]; then 
-        echo "++ driver.sh requires argument"
+        echo "++ driver_group.sh requires at least 1 argument"
         echo "$gen_error_msg"
         exit 1
         fi
@@ -50,19 +65,7 @@ dt=$(date "+%Y.%m.%d.%H.%M.%S")
 # set directories
 : 'call directories.sh'
 source config_directories.sh
-
-# enable extended globbing
-: 'enables pattern matching for removing files with overwrite option'
-shopt -s extglob
-
-# check dependencies
-: 'uncomment if you need to check dependencies
-code should run fine on current LRN systems'
-source dependencies.sh
-
-# set the python virtual environment
-: 'depends on system | may not be needed'
-source ~/env/bin/activate
+out_dir=$out_dir/$oflag
 
 # create log file
 : 'log file will capture terminal output each time driver is run
@@ -71,6 +74,20 @@ log_file=${log_dir}/log_fmriconnmap_group.${dt}
 touch $log_file
 echo "start time: $dt" 2>&1 | tee $log_file
 echo "++ creating group-level connectivity maps" 2>&1 | tee -a $log_file
+echo "++ Output directory is $out_dir" 2>&1 | tee -a $log_file
+
+# enable extended globbing
+: 'enables pattern matching'
+#shopt -s extglob
+
+# check dependencies
+: 'uncomment if you need to check dependencies
+code should run fine on current LRN systems'
+source dependencies.sh 2>&1 | tee -a $log_file
+
+# set the python virtual environment
+: 'depends on system | may not be needed'
+source ~/env/bin/activate
 
 # define subjects
 SUB=`cat ${data_dir}/id_subj`
@@ -93,7 +110,7 @@ if [ -d $out_dir ]; then
 
 else
     echo "++ creating output directory" 2>&1 | tee -a $log_file
-    mkdir $out_dir
+    mkdir -p $out_dir
 fi
 
 # copy required coordinate file to outdir
@@ -142,6 +159,7 @@ else
 fi
 #==========group mean z-score maps==========
 if [ "$mflag" ]; then
+    echo "++ group mean option selected" 2>&1 | tee -a $log_file
     for roi in ${ROI[@]}
     do
         echo "++ creating group-averaged z-score map ROI${roi}" 2>&1 | tee -a $log_file

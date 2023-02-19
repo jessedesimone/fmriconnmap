@@ -10,6 +10,7 @@ url="https://github.com/jessedesimone/fmriconnmap"
 
 ## [0.0.3] - 2023-02-17
 - improved driver_group.sh functionality
+- added option in driver_group.sh to specify output directory name
 - automated creation of mask in driver_indiv.sh
 
 ## [0.0.2] - 2023-02-15
