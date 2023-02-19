@@ -89,6 +89,8 @@
 - This will create an output directory and subdirectory for each ROI coordinate center used in the individual processing
 - Navigate to the src directory
 - Type > ./driver_group.sh -sm
+- Option to specify the name of the output subdirectory > ./driver_group.sh -smo < argument >
+- If -o is not specified, results will be stored in directory with name "output"
 - Output files (for each ROI coordinate center):
     - grp_wb_z_0_001_mean.nii.gz: group-averaged z-score map
     - grp_wb_z_1_001_pos_mask.nii.gz: binary mask file of voxels with positive z-score values

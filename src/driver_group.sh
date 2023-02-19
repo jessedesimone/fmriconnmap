@@ -74,7 +74,7 @@ log_file=${log_dir}/log_fmriconnmap_group.${dt}
 touch $log_file
 echo "start time: $dt" 2>&1 | tee $log_file
 echo "++ creating group-level connectivity maps" 2>&1 | tee -a $log_file
-echo "++ Output directory is $out_dir" 2>&1 | tee -a $log_file
+echo "++ output directory is $out_dir" 2>&1 | tee -a $log_file
 
 # enable extended globbing
 : 'enables pattern matching'
