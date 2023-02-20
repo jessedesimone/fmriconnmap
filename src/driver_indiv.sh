@@ -57,10 +57,6 @@ dt=$(date "+%Y.%m.%d.%H.%M.%S")
 : 'call config_directories.sh'
 source config_directories.sh
 
-#enable extended globbing
-: 'enables pattern matching for removing files with overwrite option'
-shopt -s extglob
-
 #check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
@@ -68,7 +64,7 @@ source dependencies.sh
 
 #set the python virtual environment
 : 'depends on system | may not be needed'
-source ~/env/bin/activate
+#source ~/env/bin/activate
 
 #create log file
 : 'log file will capture terminal output each time driver is run
@@ -105,18 +101,25 @@ anat_mask=${nii_dir}/anat_mask.nii
 echo "++ output mask dataset $anat_mask"
 
 if [ "$oflag" ]; then
-        echo "++ overwrite option selected" 2>&1 | tee -a $log_file
-        echo "++ cancel now before you *regert* it | type > ^c" | tee -a $log_file
-        echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
-        sleep 10
-        for sub in ${SUB[@]}
-        do
-            echo "++ !! CLEANING DATA DIRECTORY for $sub !!" 2>&1 | tee -a $log_file
-            cd $data_dir/$sub
-            rm -v !(*+tlrc.*)
-            rm -rf NETCORR_000_INDIV
-            cd ../../
-        done
+    echo "++ overwrite option selected" 2>&1 | tee -a $log_file
+    echo "++ cancel now before you *regert* it | type > ^c" | tee -a $log_file
+    echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+    sleep 10
+    for sub in ${SUB[@]}
+    do
+        echo "++ !! CLEANING DATA DIRECTORY for $sub !!" 2>&1 | tee -a $log_file
+        cd $data_dir/$sub
+        echo `pwd`
+        : 'set GLOBIGNORE for pattern matching'
+        GLOBIGNORE=errts.*:anat_final.*
+        rm -v -r -f *
+        if [ -d $data_dir/$sub/NETCORR_000_INDIV ]; then
+            rm -rf $data_dir/$sub/NETCORR_000_INDIV
+        fi
+        unset GLOBIGNORE
+    done
+
+    shopt -u extglob
 fi
 
 for sub in ${SUB[@]}
@@ -171,19 +174,20 @@ do
                 number of ROIs does not match the specified ROI centers |
                 overwrite protection'
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
-                echo "number of ROIs = $roi_in" 2>&1 | tee -a $log_file
-                if [ "$roi_in" < 10 ]; then
+                echo "++ number of ROIs = $roi_in" 2>&1 | tee -a $log_file
+                if [ $((roi_in)) < 10 ]; then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :1}"
-                elif [[ "$roi_in" > 10 ] & [ "$roi_in" < 100 ]]; then
+                elif [ $((roi_in)) > 10 ] && [ $((roi_in)) < 100 ]; then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :2}"
-                elif [ "$roi_in" > 100 ]; then
+                elif [ $((roi_in)) > 100 ]; then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :3}"
+                fi
                 if [ "$roi_in" -eq "$roi_out" ]; then
                     echo "outfile already exists | skipping subject"
                 else
