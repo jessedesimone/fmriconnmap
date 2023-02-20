@@ -8,15 +8,19 @@ gen_error_msg="\
     Usage: ./driver_indiv.sh [-s] [-r] [-n] | [-o] [-h]
     Required arguments:
     -s  run setup
-    -r  create roi map for all roi coordinate centers
-    -n  create wb z-score maps for each roi coordinate center
+    -r  run roi map
+    -n  run netcorr
 
     Optional arguments:
     -h  help
     -o  overwrite 
 
-    NOTE: Overwrite [-o] will remove all output files and should be employed with *extreme caution*
-    This option should really only be run if you want to start from a clean slate 
+    NOTES: 
+
+    - -srn options must be run sequentially; that is, -r is dependent on -s output and -n is dependent on -r output
+    - if -o option is given, will remove all files except for original input files in data directoryy
+    - use -o with *extreme caution*
+    - this sould only be used if you want to run package using with a clean slate
 
     "
     while getopts ":hsrnmo" opt; do
