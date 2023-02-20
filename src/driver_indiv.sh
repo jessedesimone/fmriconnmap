@@ -68,7 +68,7 @@ source dependencies.sh
 
 #set the python virtual environment
 : 'depends on system | may not be needed'
-#source ~/env/bin/activate
+source ~/env/bin/activate
 
 #create log file
 : 'log file will capture terminal output each time driver is run
@@ -156,7 +156,18 @@ do
             : 'check to see if number of outfiles match number of roi centers specified
             only run script if they do not match | overwrite protection'
             roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
-            roi_out=$(ls -l roi_mask_00* | grep ^- | wc -l)
+            roi_in=$((roi_in))
+            if (( $roi_in < 10)); then
+                roi_out=$(ls -l roi_mask_00* | grep ^- | wc -l)
+                roi_out=$((roi_out))
+            elif (( $roi_in > 10)) && (( $roi_in < 100)); then
+                roi_out=$(ls -l roi_mask_0* | grep ^- | wc -l)
+                roi_out=$((roi_out))
+            elif (( $roi_in > 100)); then
+                roi_out=$(ls -l roi_mask_* | grep ^- | wc -l)
+                roi_out=$((roi_out))
+            fi
+
             if [ "$roi_in" -eq "$roi_out" ]; then
                 echo "outfiles already exist | skipping subject"
             else
@@ -172,28 +183,31 @@ do
             outfile=final_roi_map.nii.gz
             if [ ! -f $outfile ]; then
                 tcsh -c ${src_dir}/01_indiv_roi_map.tcsh 2>&1 | tee -a $log_file
-            elif [ -f $outfile ]; then
+            else
                 : 'if outfile does exist, check to make sure that it
                 contains the correct number of ROIs | only run if the
                 number of ROIs does not match the specified ROI centers |
                 overwrite protection'
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
                 echo "++ number of ROIs = $roi_in" 2>&1 | tee -a $log_file
-                if [ $((roi_in)) < 10 ]; then
+                roi_in=$((roi_in))
+
+                if (( $roi_in < 10)); then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :1}"
-                elif [ $((roi_in)) > 10 ] && [ $((roi_in)) < 100 ]; then
+                elif (( $roi_in > 10)) && (( $roi_in < 100)); then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :2}"
-                elif [ $((roi_in)) > 100 ]; then
+                elif (( $roi_in > 100)); then
                     roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
                     roi_out2="${roi_out1:12}"
                     roi_out="${roi_out2: :3}"
                 fi
+
                 if [ "$roi_in" -eq "$roi_out" ]; then
-                    echo "outfile already exists | skipping subject"
+                    echo "outfiles already exists | skipping subject"
                 else
                     echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
                     rm -rf $outfile
