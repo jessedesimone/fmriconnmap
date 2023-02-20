@@ -171,9 +171,19 @@ do
                 number of ROIs does not match the specified ROI centers |
                 overwrite protection'
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
-                roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
-                roi_out2="${roi_out1:12}"
-                roi_out="${roi_out2: :1}"
+                echo "number of ROIs = $roi_in" 2>&1 | tee -a $log_file
+                if [ "$roi_in" < 10 ]; then
+                    roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
+                    roi_out2="${roi_out1:12}"
+                    roi_out="${roi_out2: :1}"
+                elif [[ "$roi_in" > 10 ] & [ "$roi_in" < 100 ]]; then
+                    roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
+                    roi_out2="${roi_out1:12}"
+                    roi_out="${roi_out2: :2}"
+                elif [ "$roi_in" > 100 ]; then
+                    roi_out1=$(grep -n "ni_dimen" final_roi_map.niml.lt)
+                    roi_out2="${roi_out1:12}"
+                    roi_out="${roi_out2: :3}"
                 if [ "$roi_in" -eq "$roi_out" ]; then
                     echo "outfile already exists | skipping subject"
                 else
