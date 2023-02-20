@@ -30,9 +30,7 @@
 30  Language.pSTG_R
 31  Limbic.aPaHC_R
 32  Limbic.aPaHC_L
-33  Limbic.pPaHC_R
-34  Limbic.pPaHC_L
-35  Limbic.Hipp_R
-36  Limbic.Hipp_L
-37  Limbic.Amyg_R
-38  Limbic.Amyg_L
+34  Limbic.Hipp_R
+35  Limbic.Hipp_L
+36  Limbic.Amyg_R
+37  Limbic.Amyg_L

@@ -13,7 +13,7 @@ echo "++ Running 00_indiv_setup.tcsh"
 
 # configuration files
 set vsub    = `cat subname.txt`
-set ilist   = 00_list_of_all_roi_centers_test.txt
+set ilist   = 00_list_of_all_roi_centers.txt
 
 # define infiles
 set vepi    = errts."${vsub}".anaticor+tlrc

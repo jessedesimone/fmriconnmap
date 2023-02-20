@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 : 'Driver to create group-level functional connectivity maps for a specified list of ROI centers'
 
 head -9 ../CHANGELOG.md
@@ -41,14 +41,14 @@ gen_error_msg="\
                     echo "oflag is ${OPTARG}"
                     ;;
                 :) #expected argument omitted:
-                    echo "Error: -${OPTARG} requires an argument"
+                    echo "ERROR: -${OPTARG} requires an argument"
                     echo "$gen_error_msg"
                     exit 1
                     ;;
         esac
     done
     if [ $OPTIND -eq 1 ]; then 
-        echo "++ driver_group.sh requires at least 1 argument"
+        echo "++ ERROR: driver_group.sh requires at least 1 argument"
         echo "$gen_error_msg"
         exit 1
         fi

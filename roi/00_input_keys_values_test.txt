@@ -1,8 +1,0 @@
-1   DefaultMode.PCC
-2   SensoriMotor.Lateral_L
-3   Visual.Occipital
-4   Salience.ACC
-5   DorsalAttention.FEF_L
-6   FrontoParietal.LPFC_R
-7   Language.pSTG_R
-8   Limbic.Hipp_R

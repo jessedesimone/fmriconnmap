@@ -11,8 +11,10 @@
 - This feature creates a FWER-corrected group-level map/mask based on the cluster-size threshold for a given voxel-wise p-value (0.001) and alpha-level threshold (0.01); see 3dClustSim in AFNI for more details.
 
 ## Subject-level instructions
-### Clone git repository 
+### Clone git repository & configure directories
 - Fork repository to your GitHub account and clone repository to local machine git clone < git@github.com:*username*/afniconnmap.git >
+- Navigate to src and open config_directories.sh
+- Update the paths to your package; you should really only need to update the top directory (i.e., location where you downloaded the fmriconnmap package)
 
 ### Configure python virtual environment
 - This package includes python source code from afni 

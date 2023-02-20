@@ -104,6 +104,21 @@ fi
 anat_mask=${nii_dir}/anat_mask.nii
 echo "++ output mask dataset $anat_mask"
 
+if [ "$oflag" ]; then
+        echo "++ overwrite option selected" 2>&1 | tee -a $log_file
+        echo "++ cancel now before you *regert* it > ^c" | tee -a $log_file
+        echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+        sleep 10
+        for sub in ${SUB[@]}
+        do
+            echo "++ !! CLEANING DATA DIRECTORY for $sub !!" 2>&1 | tee -a $log_file
+            cd $data_dir/$sub
+            rm -v !(*+tlrc.*)
+            rm -rf NETCORR_000_INDIV
+            cd ../../
+        done
+fi
+
 for sub in ${SUB[@]}
 do
     echo " " 2>&1 | tee -a $log_file
@@ -121,19 +136,11 @@ do
     echo $sub > ${data_dir}/${sub}/subname.txt
 
     cd $data_dir/$sub
+
     #==========handle options==========
-    if [ "$oflag" ]; then
-        echo "++ overwrite option selected" 2>&1 | tee -a $log_file
-        echo "++ cancel now before you *regert* it > ^c" | tee -a $log_file
-        echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
-        echo "++ !! OVERWRITING OUTPUT DIRECTORY !!" 2>&1 | tee -a $log_file
-        sleep 10
-        rm -v !(*+tlrc.*)
-        rm -rf NETCORR_000_INDIV
-    fi
+
     if [[ -f ${epi}.HEAD ]] && [[ -f ${anat}.HEAD ]]; then
         : 'check that infiles for subject exist, then proceed'
-        echo "++ epi and anat infiles exist" 2>&1 | tee -a $log_file
         #==========setup==========
         if [ "$sflag" ]; then
             : 'run 00_indiv_setup.tcsh'
