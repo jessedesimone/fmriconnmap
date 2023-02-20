@@ -25,7 +25,7 @@ set irois    = `\ls roi_mask*gz`
 
 # File of label+key values. Here, for N ROIs, the "keys" are integers,
 # 1..N.  The order of labels should match the order of listing ${irois}
-set ilabtxt  = 00_input_keys_values_test.txt
+set ilabtxt  = 00_input_keys_values.txt
 
 # ---------- output and supplementary files: made here ----------
 
