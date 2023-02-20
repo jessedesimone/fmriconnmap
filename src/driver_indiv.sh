@@ -106,7 +106,7 @@ echo "++ output mask dataset $anat_mask"
 
 if [ "$oflag" ]; then
         echo "++ overwrite option selected" 2>&1 | tee -a $log_file
-        echo "++ cancel now before you *regert* it > ^c" | tee -a $log_file
+        echo "++ cancel now before you *regert* it | type > ^c" | tee -a $log_file
         echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
         sleep 10
         for sub in ${SUB[@]}
