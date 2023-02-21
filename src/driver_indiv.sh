@@ -106,9 +106,10 @@ echo "++ output mask dataset $anat_mask"
 
 if [ "$oflag" ]; then
     echo "++ overwrite option selected" 2>&1 | tee -a $log_file
-    echo "++ cancel now before you *regert* it | type > ^c" | tee -a $log_file
-    echo "++ pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+    echo "++ cancel now while you still can ... | type > ^c"
+    echo "++ pausing code for 10 seconds while you ponder this decision"
     sleep 10
+    echo "++ no regerts"
     for sub in ${SUB[@]}
     do
         echo "++ !! CLEANING DATA DIRECTORY for $sub !!" 2>&1 | tee -a $log_file
@@ -122,8 +123,7 @@ if [ "$oflag" ]; then
         fi
         unset GLOBIGNORE
     done
-
-    shopt -u extglob
+    exit 0
 fi
 
 for sub in ${SUB[@]}
