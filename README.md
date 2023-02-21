@@ -91,7 +91,8 @@
 - This will create an output directory and subdirectory for each ROI coordinate center used in the individual processing
 - Navigate to the src directory
 - Type > ./driver_group.sh -sm
-- Option to specify the name of the output subdirectory > ./driver_group.sh -smo < argument >
+- Option to specify the name of the output subdirectory > ./driver_group.sh -smo < output subdirectory >
+- If running options sequentially, make sure you are specifying the same output directory
 - If -o is not specified, results will be stored in directory with name "output"
 - Output files (for each ROI coordinate center):
     - grp_wb_z_0_001_mean.nii.gz: group-averaged z-score map
@@ -105,6 +106,7 @@
 - Navigate to the src directory
 - Type > ./driver_group.sh -c
 - Option to run sequentially with [-s] and [-m] arguments > ./driver_group.sh -smc
+- If running options sequentially, make sure you are specifying the same output directory
 - Output files (for each ROI coordinate center):
     - grp_wb_z_*roi*_unc.*view*.jpg: axial, sagital, and coronal images of the uncorrected group-level connectivity maps
     - grp_wb_z_*roi*_unc.txt: cluster report for uncorrected group-level connectivity map

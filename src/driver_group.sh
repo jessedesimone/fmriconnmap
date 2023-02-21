@@ -100,10 +100,11 @@ anat_template=MNI152_T1_2009c+tlrc
 # check if outdir exists or create
 if [ -d $out_dir ]; then 
     echo "++ output directory already exists" 2>&1 | tee -a $log_file
-    echo "++ consider moving to backup directory or remove" 2>&1 | tee -a $log_file
-    echo "pausing code for 10 seconds while you ponder this decision" 2>&1 | tee -a $log_file
+    echo "++ are you sure you would like to output results here?"
+    echo "++ cancel now while you still can ... | type > ^c"
+    echo "++ pausing code for 10 seconds while you ponder this decision"
     sleep 10
-
+    echo "++ no regerts"
 else
     echo "++ creating output directory" 2>&1 | tee -a $log_file
     mkdir -p $out_dir
