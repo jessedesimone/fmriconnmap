@@ -137,27 +137,75 @@ if [ "$sflag" ]; then
     echo " " 2>&1 | tee -a $log_file
     echo "++ setup option selected" 2>&1 | tee -a $log_file
     tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
-fi
 
-# create roi directories
-if [ ! -f _tmp_roi_list.txt ]; then
-    echo "++ no setup file found" 2>&1 | tee -a $log_file
-    echo "++ must run [-s] option first " 2>&1 | tee -a $log_file
-    exit 1
-else
     ROI=`cat _tmp_roi_list.txt`
     for roi in ${ROI[@]}
-    do 
-        mkdir -p $roi
+    do
+        if [ -d $roi ]; then
+            echo "++ roi directory $roi already created" 2>&1 | tee -a $log_file
+        else
+            echo "++ creating roi${roi} directory" 2>&1 | tee -a $log_file
+            mkdir -p $roi
+        fi
         if [ ! -f $roi/${anat_template}.HEAD ]; then
             echo "coping anatomical template files" 2>&1 | tee -a $log_file
             3dcopy ${nii_dir}/${anat_template} $roi/
         fi
     done
+    #fi
 fi
+
 #==========group mean z-score maps==========
 if [ "$mflag" ]; then
     echo "++ group mean option selected" 2>&1 | tee -a $log_file
+    if [ ! -f roi_centers.txt ]; then
+        echo "++ ERROR: no setup file found | run [-s] option first" 2>&1 | tee -a $log_file
+        echo "++ terminating script" 2>&1 | tee -a $log_file
+        exit 1
+    else
+        : 'if setup file does exist, make sure that the number of roi output directories
+        matches the dimensions specified in the setup file'
+        roi_in=$(grep -c ".*" roi_centers.txt)
+        roi_in=$((roi_in))
+        roi_out=$(find . -mindepth 1 -type d | wc -l)
+
+        if [ "$roi_in" -eq "$roi_out" ]; then
+            echo "++ output directory setup confirmed" 2>&1 | tee -a $log_file
+
+            for roi in ${ROI[@]}
+            do
+                echo $roi > ${roi}/_tmp_roiname.txt
+
+                # copy infiles
+                for sub in ${SUB[@]}
+                do
+                    cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_wb_z_roi_${roi}.nii.gz
+                done
+
+                # enter roi directory
+                cd $out_dir/$roi
+
+                # create group-averaged z-score maps
+                if [ -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
+                : 'if outfile exists do not run'
+                    echo "++ outfile already created for ROI${roi} | skipping condition" 2>&1 | tee -a $log_file
+                else
+                    : 'run if outfile does not exist'
+                    tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+                fi
+            done
+        else
+            echo "++ ERROR: the number of output roi directories does not match you setup file dimensions"
+            echo "++ something is clearly wrong" 2>&1 | tee -a $log_file
+            echo "++ check your files and re-run setup/create new output directory"
+            echo "++ terminating script" 2>&1 | tee -a $log_file
+            exit 1
+        fi
+    fi
+fi
+
+: '
+if [ "$mflag" ]; then
     for roi in ${ROI[@]}
     do
         echo "++ creating group-averaged z-score map ROI${roi}" 2>&1 | tee -a $log_file
@@ -171,6 +219,8 @@ if [ "$mflag" ]; then
         
         # enter roi directory
         cd $roi
+
+        # create group-averaged z-score maps
         if [ -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
         : 'if outfile exists do not run'
             echo "++ outfile already created for ROI${roi}"
@@ -182,6 +232,7 @@ if [ "$mflag" ]; then
         cd ../
     done
 fi
+'
 
 #==========group-level connectivity maps==========
 if [ "$cflag" ]; then

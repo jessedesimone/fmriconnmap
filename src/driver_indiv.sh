@@ -236,7 +236,7 @@ do
         
     else
         : 'terminate script if missing input files'
-        echo "anat and/or epi infiles not found for $sub"
+        echo "ERROR: anat and/or epi infiles not found for $sub"
         echo "terminating script"
         exit 1
     fi
