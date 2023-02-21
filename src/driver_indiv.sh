@@ -157,19 +157,10 @@ do
             only run script if they do not match | overwrite protection'
             roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
             roi_in=$((roi_in))
-            if (( $roi_in < 10)); then
-                roi_out=$(ls -l roi_mask_00* | grep ^- | wc -l)
-                roi_out=$((roi_out))
-            elif (( $roi_in > 10)) && (( $roi_in < 100)); then
-                roi_out=$(ls -l roi_mask_0* | grep ^- | wc -l)
-                roi_out=$((roi_out))
-            elif (( $roi_in > 100)); then
-                roi_out=$(ls -l roi_mask_* | grep ^- | wc -l)
-                roi_out=$((roi_out))
-            fi
-
+            roi_out=$(ls -l roi_mask_* | grep ^- | wc -l)
+            roi_out=$((roi_out))
             if [ "$roi_in" -eq "$roi_out" ]; then
-                echo "outfiles already exist | skipping subject"
+                echo "outfiles already exist | skipping subject" 2>&1 | tee -a $log_file
             else
                 tcsh -c ${src_dir}/00_indiv_setup.tcsh 2>&1 | tee -a $log_file
             fi
@@ -207,9 +198,9 @@ do
                 fi
 
                 if [ "$roi_in" -eq "$roi_out" ]; then
-                    echo "outfiles already exists | skipping subject"
+                    echo "++ outfile already contains correct number of ROIs | skipping subject" 2>&1 | tee -a $log_file
                 else
-                    echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!"
+                    echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!" 2>&1 | tee -a $log_file
                     rm -rf $outfile
                     tcsh -c ${src_dir}/01_indiv_roi_map.tcsh 2>&1 | tee -a $log_file
                 fi
@@ -224,15 +215,19 @@ do
             : 'run script if outdir does not exist '
             if [ ! -d NETCORR_000_INDIV ]; then
                 tcsh -c ${src_dir}/02_indiv_netcorr.tcsh 2>&1 | tee -a $log_file
-            elif [ -d NETCORR_000_INDIV ]; then
+            else 
                 : 'if outdir does exist, check to see if number of outfiles matches
                 the specified number of ROI centers | only run if they do not match |
                 overwrite protection'
                 roi_in=$(grep -c ".*" ${roi_dir}/00_list_of_all_roi_centers.txt)
-                roi_out=$(ls -l NETCORR_000_INDIV/WB_Z_ROI_00*.nii.gz | grep ^- | wc -l)
+                echo "++ number of ROIs = $roi_in" 2>&1 | tee -a $log_file
+                roi_in=$((roi_in))
+                roi_out=$(ls -l NETCORR_000_INDIV/WB_Z_ROI_*.nii.gz | grep ^- | wc -l)
                 if [ "$roi_in" -eq "$roi_out" ]; then
-                    echo "outfiles already exist | skipping subject"
+                    echo "outfiles already exist | skipping subject" 2>&1 | tee -a $log_file
                 else
+                    echo "++ !!! OVERWRITING EXISTING DATASET | final_roi_map.nii.gz !!!" 2>&1 | tee -a $log_file
+                    rm -rf NETCORR_000_INDIV/WB_Z_ROI_*.nii.gz
                     tcsh -c ${src_dir}/02_indiv_netcorr.tcsh 2>&1 | tee -a $log_file
                 fi
             fi
