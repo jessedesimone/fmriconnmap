@@ -12,7 +12,7 @@ echo "++ Running 00_group_setup.tcsh"
 set ilist   = roi_centers.txt
 
 # define outputs/temp files
-set tlist   = _tmp_roi_list.txt
+set tlist   = roi_list.txt
 
 # get dimensions of ROI coordinate list
 set dims = `1d_tool.py              \

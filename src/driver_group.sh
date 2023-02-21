@@ -138,7 +138,7 @@ if [ "$sflag" ]; then
     echo "++ setup option selected" 2>&1 | tee -a $log_file
     tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
 
-    ROI=`cat _tmp_roi_list.txt`
+    ROI=`cat roi_list.txt`
     for roi in ${ROI[@]}
     do
         if [ -d $roi ]; then
@@ -165,6 +165,7 @@ if [ "$mflag" ]; then
     else
         : 'if setup file does exist, make sure that the number of roi output directories
         matches the dimensions specified in the setup file'
+
         roi_in=$(grep -c ".*" roi_centers.txt)
         roi_in=$((roi_in))
         roi_out=$(find . -mindepth 1 -type d | wc -l)
@@ -172,9 +173,10 @@ if [ "$mflag" ]; then
         if [ "$roi_in" -eq "$roi_out" ]; then
             echo "++ output directory setup confirmed" 2>&1 | tee -a $log_file
 
+            ROI=`cat roi_list.txt`
             for roi in ${ROI[@]}
             do
-                echo $roi > ${roi}/_tmp_roiname.txt
+                echo $roi > ${out_dir}/${roi}/_tmp_roiname.txt
 
                 # copy infiles
                 for sub in ${SUB[@]}
@@ -193,6 +195,10 @@ if [ "$mflag" ]; then
                     : 'run if outfile does not exist'
                     tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
                 fi
+                
+                # clean up
+                rm -rf _tmp*
+
             done
         else
             echo "++ ERROR: the number of output roi directories does not match you setup file dimensions"
@@ -203,36 +209,6 @@ if [ "$mflag" ]; then
         fi
     fi
 fi
-
-: '
-if [ "$mflag" ]; then
-    for roi in ${ROI[@]}
-    do
-        echo "++ creating group-averaged z-score map ROI${roi}" 2>&1 | tee -a $log_file
-        echo $roi > ${roi}/_tmp_roiname.txt
-        
-        # copy infiles
-        for sub in ${SUB[@]}
-        do
-            cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_wb_z_roi_${roi}.nii.gz
-        done
-        
-        # enter roi directory
-        cd $roi
-
-        # create group-averaged z-score maps
-        if [ -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
-        : 'if outfile exists do not run'
-            echo "++ outfile already created for ROI${roi}"
-        else
-            : 'run if outfile does not exist'
-            tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
-        fi
-
-        cd ../
-    done
-fi
-'
 
 #==========group-level connectivity maps==========
 if [ "$cflag" ]; then
@@ -263,7 +239,6 @@ if [ "$cflag" ]; then
     done
 fi
 # clean up
-rm -rf _tmp*
 exit 0
 
 
