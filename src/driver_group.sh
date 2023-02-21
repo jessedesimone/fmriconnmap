@@ -76,10 +76,6 @@ echo "start time: $dt" 2>&1 | tee $log_file
 echo "++ creating group-level connectivity maps" 2>&1 | tee -a $log_file
 echo "++ output directory is $out_dir" 2>&1 | tee -a $log_file
 
-# enable extended globbing
-: 'enables pattern matching'
-#shopt -s extglob
-
 # check dependencies
 : 'uncomment if you need to check dependencies
 code should run fine on current LRN systems'
@@ -95,8 +91,8 @@ echo "number of subjects in analysis" 2>&1 | tee -a $log_file
 awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
 
 # define roi coordinate files
-ilist=${roi_dir}/00_list_of_all_roi_centers_test.txt
-ilist2=${roi_dir}/00_input_keys_values_test.txt
+ilist=${roi_dir}/00_list_of_all_roi_centers.txt
+ilist2=${roi_dir}/00_input_keys_values.txt
 
 # define anat template
 anat_template=MNI152_T1_2009c+tlrc
@@ -122,6 +118,7 @@ else
 fi
 
 # copy roi labels too to help with QC
+: 'not used in the pipeline'
 if [ ! -f ${out_dir}/roi_labs.txt ]; then
     cp $ilist2 ${out_dir}/roi_labs.txt
 else

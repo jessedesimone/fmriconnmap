@@ -121,6 +121,7 @@ if [ "$oflag" ]; then
         if [ -d $data_dir/$sub/NETCORR_000_INDIV ]; then
             rm -rf $data_dir/$sub/NETCORR_000_INDIV
         fi
+        : 'unset GLOBIGNORE for pattern matching'
         unset GLOBIGNORE
     done
     exit 0
