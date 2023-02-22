@@ -177,8 +177,9 @@ if [ "$mflag" ]; then
             for roi in ${ROI[@]}
             do
                 echo $roi > ${out_dir}/${roi}/_tmp_roiname.txt
+                cp $nii_dir/anat_mask_ero.nii.gz ${out_dir}/${roi}/_tmp_anat_mask_ero.nii.gz
 
-                # copy infiles
+                # copy subject infiles
                 for sub in ${SUB[@]}
                 do
                     cp ${data_dir}/${sub}/NETCORR_000_INDIV/WB_Z_ROI_${roi}.nii.gz ${out_dir}/${roi}/_tmp_${sub}_wb_z_roi_${roi}.nii.gz
@@ -212,6 +213,8 @@ if [ "$mflag" ]; then
                 fi
             #clean up
             rm -rf _tmp_*_wb_z_roi_${roi}.nii.gz
+            rm -rf _tmp_anat_mask_ero.nii.gz
+            rm -rf _tmp_grp_wb_z_1_${roi}_pos_mask.nii.gz
             done
         else
             echo "++ ERROR: the number of output roi directories does not match you setup file dimensions"
@@ -230,7 +233,7 @@ if [ "$cflag" ]; then
     sub_in=$(awk 'END { print NR }' ${data_dir}/id_subj)
     sub_in=$((sub_in))
 
-    ROI=`cat roi_list.txt`
+    ROI=`cat $out_dir/roi_list.txt`
     for roi in ${ROI[@]}
     do
         echo "++ creating group-averaged connmap for ROI ${roi}" 2>&1 | tee -a $log_file

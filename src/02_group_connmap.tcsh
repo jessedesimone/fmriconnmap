@@ -18,9 +18,9 @@ set iname    = ${ipref}_2_"${vname}"_mean_pos.nii.gz
 set ianat    = MNI152_T1_2009c+tlrc
 
 # set uncorrected and corrected p-values
-set opvalunc = 0.01    #uncorrected p-value
-set oathr    = 0.01     #corrected (whole volume) alpha-values
-set opthr    = 0.001    #uncorrected (per voxel) p-values
+set opvalunc = 0.05    #uncorrected p-value
+set oathr    = 0.05     #corrected (whole volume) alpha-values
+set opthr    = 0.005    #uncorrected (per voxel) p-values
 
 # set outfile names
 set opref    = grp_wb_z
