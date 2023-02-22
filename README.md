@@ -83,9 +83,9 @@
 
 ### Specify uncorrected and corrected p-values in 02_group_connmap.tcsh
 - These values will be used for statistical and cluster level thresholding; see 3dClustSim AFNI page for information on athr and pthr
-    - set opvalunc (uncorrected p-value); default = 0.01
-    - set oathr (corrected alpha-level threshold); default = 0.01
-    - set opthr (uncorrected per voxel p-values); default = 0.001
+    - set opvalunc (uncorrected p-value); default = 0.05
+    - set oathr (corrected alpha-level threshold); default = 0.05
+    - set opthr (uncorrected per voxel p-values); default = 0.005
 
 ### Run 00_group_setup.tcsh and 01_group_WB_mean_maps.tcsh
 - This will create an output directory and subdirectory for each ROI coordinate center used in the individual processing

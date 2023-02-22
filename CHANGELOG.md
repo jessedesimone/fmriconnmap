@@ -9,7 +9,7 @@ Author: J DeSimone
 url="https://github.com/jessedesimone/fmriconnmap"
 
 ## [0.0.4] - 2023-02-22
-- add function to erode anatomical mask from edges (thanks Brad Wilkes!)
+- added function to erode anatomical mask from edges to help clean up final group-level connectivity maps
 
 ## [0.0.3] - 2023-02-17
 - improved driver_group.sh functionality

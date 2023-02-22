@@ -269,9 +269,8 @@ if [ "$cflag" ]; then
         fi
 
         # clean up
-        #rm -rf _tmp*
-        #rm -rf MNI*
-        #rm -rf 3dFWHMx*
+        rm -rf _tmp*
+        rm -rf 3dFWHMx*
 
     done
 fi
