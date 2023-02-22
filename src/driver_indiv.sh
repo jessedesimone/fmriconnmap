@@ -99,6 +99,9 @@ if [ ! -f ${nii_dir}/anat_mask.nii ]; then
     : 'find the errts input file for the first subject and resample to epi dimensions'
     firstsub=$(head -n 1 ${data_dir}/id_subj)
     3dresample -master ${data_dir}/$firstsub/errts.${firstsub}.anaticor+tlrc -rmode NN -prefix ${nii_dir}/anat_mask.nii -inset ${nii_dir}/anat_mask0.nii
+    : 'create erode mask for use in group processing'
+    fslmaths ${nii_dir}/anat_mask.nii -kernel sphere 3 -ero ${nii_dir}/anat_mask_ero.nii.gz
+    # clean up
     rm -rf ${nii_dir}/anat_mask0.nii
 fi
 anat_mask=${nii_dir}/anat_mask.nii

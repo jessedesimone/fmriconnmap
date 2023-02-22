@@ -83,7 +83,7 @@ source dependencies.sh 2>&1 | tee -a $log_file
 
 # set the python virtual environment
 : 'depends on system | may not be needed'
-source ~/env/bin/activate
+#source ~/env/bin/activate
 
 # define subjects
 SUB=`cat ${data_dir}/id_subj`
@@ -188,22 +188,35 @@ if [ "$mflag" ]; then
                 cd $out_dir/$roi
 
                 # create group-averaged z-score maps
-                if [ -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
-                : 'if outfile exists do not run'
-                    echo "++ outfile already created for ROI${roi} | skipping condition" 2>&1 | tee -a $log_file
-                else
-                    : 'run if outfile does not exist'
+                if [ ! -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
+                    : 'outfile does not exist yet - create outfile'
                     tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+                else 
+                    : 'if outfile does exist, check that it was created using the correct number of input files'
+                    sub_in=$(awk 'END { print NR }' ${data_dir}/id_subj)
+                    sub_in=$((sub_in))
+                    HIST=`3dinfo -history grp_wb_z_0_${roi}_mean.nii.gz | tail -n1`
+                    echo $HIST > _tmp_list.txt
+                    sub_out=$(grep -o "_tmp_" _tmp_list.txt | wc -l)
+                    sub_out=$((sub_out))
+                    if [ "$sub_in" -eq "$sub_out" ]; then
+                        : 'correct outfile exists - do not run'
+                        echo "++ outfile already created for ROI ${roi} | skipping condition" 2>&1 | tee -a $log_file
+                    else
+                        : 'incorrect outfile exists - remove and overwrite'
+                        echo "++ group-averaged z-score maps already exist but do not match the specified number of subject inputs" 2>&1 | tee -a $log_file
+                        echo "++ OVERWRITING EXISTING OUTFILES" 2>&1 | tee -a $log_file
+                        rm -rf grp_wb_z_*_${roi}_*.nii.gz
+                        tcsh -c ${src_dir}/01_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+                    fi
                 fi
-                
-                # clean up
-                rm -rf _tmp*
-
+            #clean up
+            rm -rf _tmp_*_wb_z_roi_${roi}.nii.gz
             done
         else
             echo "++ ERROR: the number of output roi directories does not match you setup file dimensions"
             echo "++ something is clearly wrong" 2>&1 | tee -a $log_file
-            echo "++ check your files and re-run setup/create new output directory"
+            echo "++ condsider creating a new output directory and starting over, beginning with setup [-s]"
             echo "++ terminating script" 2>&1 | tee -a $log_file
             exit 1
         fi
@@ -212,29 +225,50 @@ fi
 
 #==========group-level connectivity maps==========
 if [ "$cflag" ]; then
+
+    : 'counting number of input subjects to compare with output file'
+    sub_in=$(awk 'END { print NR }' ${data_dir}/id_subj)
+    sub_in=$((sub_in))
+
+    ROI=`cat roi_list.txt`
     for roi in ${ROI[@]}
     do
-        echo "++ creating group-averaged connmap for ROI${roi}" 2>&1 | tee -a $log_file
-        cd $roi
+        echo "++ creating group-averaged connmap for ROI ${roi}" 2>&1 | tee -a $log_file
+        cd $out_dir/$roi
 
         #create uncorrected group-level connectivity map
-        if [ ! -f grp_wb_z_1_${roi}_pos_mask.nii.gz ]; then
-            echo "++ no mask to create connmap" 2>&1 | tee -a $log_file
+        if [[ ! -f grp_wb_z_1_${roi}_pos_mask.nii.gz ]] || [[ ! -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]]; then
+            echo "++ one or more required infiles do not exist" 2>&1 | tee -a $log_file
+            echo "++ required inputs: grp_wb_z_1_${roi}_pos_mask.nii.gz & grp_wb_z_2_${roi}_mean_pos.nii.gz" 2>&1 | tee -a $log_file
             echo "++ must run [-m] option first" 2>&1 | tee -a $log_file
+            exit 1
         else
             if [ ! -f grp_wb_z_${roi}_fwer.nii.gz ]; then
                 tcsh -c ${src_dir}/02_group_connmap.tcsh 2>&1 | tee -a $log_file
             else 
-                echo "++ group-averaged connmap already exists" 2>&1 | tee -a $log_file
+                : 'calculate the number of subject infile files used to create group averaged z-score map'
+                HIST=`3dinfo -history grp_wb_z_0_${roi}_mean.nii.gz | tail -n1`
+                echo $HIST > _tmp_list.txt
+                sub_out=$(grep -o "_tmp_" _tmp_list.txt | wc -l)
+                sub_out=$((sub_out))
+
+                if [ "$sub_in" -eq "$sub_out" ]; then
+                    : 'correct infile was used in this step - do not create new outfil'
+                    echo "++ group-averaged connmap already exists" 2>&1 | tee -a $log_file
+                    echo "++ skipping condition" 2>&1 | tee -a $log_file
+                else
+                    echo "++ ERROR: group-averaged connmap already exists but was not created using the correct number of subject-level inputs" 2>&1 | tee -a $log_file
+                    echo "++ check your subject list and re-run -m option before proceeding" 2>&1 | tee -a $log_file
+                    echo "++ terminating script" 2>&1 | tee -a $log_file
+                    exit 1
+                fi
             fi
         fi
 
         # clean up
-        rm -rf _tmp*
-        rm -rf MNI*
-        rm -rf 3dFWHMx*
-
-        cd ../
+        #rm -rf _tmp*
+        #rm -rf MNI*
+        #rm -rf 3dFWHMx*
 
     done
 fi
