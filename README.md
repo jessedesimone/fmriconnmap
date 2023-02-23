@@ -1,6 +1,6 @@
 # fmriconnmap
 
-<img src="/images/default_mode_full_view.jpg" alt="Alt text" title="Optional title">
+<img src="images/default_mode_full_view.jpg" alt="Alt text" title="Optional title">
 
 ## Functions
 ### Function 1 - Create subject-level seed-based functional connectivity maps
