@@ -1,5 +1,7 @@
 # fmriconnmap
 
+img src="/images/default_mode_full_view.jpg" alt="Alt text" title="Optional title"
+
 ## Functions
 ### Function 1 - Create subject-level seed-based functional connectivity maps
 - Create individual subject-level functional connectivity z-score maps/masks for a specified list of ROI coordinate centers
@@ -128,4 +130,3 @@
 - Default ROI locations were derived from the CONN toolbox networks.txt and atlas.txt files <https://web.conn-toolbox.org/home>; if using any of the default ROIs, please cite CONN toolbox: 
     - Whitfield-Gabrieli, S., & Nieto-Castanon, A. (2012). Conn: A functional connectivity toolbox for correlated and anticorrelated brain networks. Brain connectivity, 2(3), 125-141
     - Nieto-Castanon, A. (2020). Handbook of functional connectivity Magnetic Resonance Imaging methods in CONN. Boston, MA: Hilbert Press
-
