@@ -51,7 +51,12 @@ gen_error_msg="\
         echo "++ ERROR: driver_group.sh requires at least 1 argument"
         echo "$gen_error_msg"
         exit 1
-        fi
+    fi
+    if [ ! "$oflag" ]; then 
+        echo "ERROR: [-o <string>] must be provided"
+        echo "$gen_error_msg" >&2
+        exit 1
+    fi  
     shift $((OPTIND -1))
 
 #==========configuration==========
