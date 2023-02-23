@@ -17,7 +17,7 @@ gen_error_msg="\
 
     NOTES: 
 
-    - -srn options must be run sequentially; that is, -r is dependent on -s output and -n is dependent on -r output
+    - [srn] options must be run sequentially; that is, [-r] is dependent on [-s] output and [-n] is dependent on [-r] output
     - if -o option is given, will remove all files except for original input files in data directoryy
     - use -o with *extreme caution*
     - this sould only be used if you want to run package using with a clean slate
@@ -47,11 +47,11 @@ gen_error_msg="\
         echo "++ ERROR: driver.sh requires at least 1 argument"
         echo "$gen_error_msg"
         exit 1
-        fi
+    fi
     shift $((OPTIND -1))
 
 #==========configuration==========
-echo "DRIVER.SH STARTED"
+echo "DRIVER_INDIV.SH STARTED"
 
 #set datetime
 : 'used for datetime stamp log files'
