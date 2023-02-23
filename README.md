@@ -1,7 +1,5 @@
 # fmriconnmap
 
-<img src="/Users/jessedesimone/DeSimone_Github/fmriconnmap/images/default_mode_full_view.jpg" alt="Alt text" title="Optional title">
-
 ## Functions
 ### Function 1 - Create subject-level seed-based functional connectivity maps
 - Create individual subject-level functional connectivity z-score maps/masks for a specified list of ROI coordinate centers
