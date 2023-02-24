@@ -21,7 +21,7 @@
 - This package includes python source code from afni 
 - matplotlib package is required for 02_indiv_netcorr.tcsh
 - For me, the terminal command is: <br/>
-```> source env/bin/activate`` 
+> ```source env/bin/activate``` 
 - This is built into the driver.sh script configuration so update as needed; If getting an error, try uncommenting this line of code in the driver
 - The dependencies.sh script will check that matplotlib is installed and will exit if not
 
@@ -53,8 +53,8 @@
 - Navigate to src directory
 - Type >``` ./driver.sh -s ```
 - Type > ``` ./driver.sh -r ```
-- Option to run both sequentially using > ./driver.sh -sr 
-- Type > ./driver.sh -h for help
+- Option to run both sequentially using > ```./driver.sh -sr ```
+- Type > ```./driver.sh -h``` for help
 
 ### QC final_roi_map.nii.gz and final_roi_map.niml.lt
 - Navigate to data/*subj* directories
@@ -65,9 +65,9 @@
 
 ### Run 02_indiv_netcorr.tcsh 
 - Navigate to src directory
-- Type > ./driver.sh -n 
+- Type > ```./driver.sh -n``` 
 - Option to run sequentially with setup and roi_map scripts > ./driver.sh -srn
-- Type > ./driver.sh -h for help
+- Type > ```./driver.sh -h``` for help
 
 ### QC NetCorr output files
 - Output files
@@ -93,21 +93,21 @@
 ### Run 00_group_setup.tcsh and 01_group_WB_mean_maps.tcsh
 - This will create an output directory and subdirectory for each ROI coordinate center used in the individual processing
 - Navigate to the src directory
-- Type > ./driver_group.sh -sm
-- Option to specify the name of the output subdirectory > ./driver_group.sh -smo < output subdirectory >
+- Type > ```./driver_group.sh -sm```
+- Option to specify the name of the output subdirectory > ```./driver_group.sh -smo < output subdirectory >```
 - If running options sequentially, make sure you are specifying the same output directory
 - If -o is not specified, results will be stored in directory with name "output"
 - Output files (for each ROI coordinate center):
     - grp_wb_z_0_001_mean.nii.gz: group-averaged z-score map
     - grp_wb_z_1_001_pos_mask.nii.gz: binary mask file of voxels with positive z-score values
     - grp_wb_z_2_001_mean_pos.nii.gz: group-averaged z-score map with only positive voxels retains (removes anticorrelated voxels)
-- Type > ./driver_group.sh -h for help
+- Type > ```./driver_group.sh -h``` for help
 
 ### Run 00_group_connmap.tcsh
 - This will create a FWER-corrected group-level map/mask based on the cluster-size threshold for the voxel-wise p-value and alpha-level threshold specified above
 - This will also create a series of jpeg images for QC purposes
 - Navigate to the src directory
-- Type > ./driver_group.sh -c
+- Type > ```./driver_group.sh -c```
 - Option to run sequentially with [-s] and [-m] arguments > ./driver_group.sh -smc
 - If running options sequentially, make sure you are specifying the same output directory
 - Output files (for each ROI coordinate center):
