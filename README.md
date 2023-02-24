@@ -12,7 +12,8 @@
 
 ## Subject-level instructions
 ### Clone git repository & configure directories
-- Fork repository to your GitHub account and clone repository to local machine git clone < git@github.com:*username*/afniconnmap.git >
+- Fork repository to your GitHub account and clone repository to local machine 
+```git clone git@github.com:*username*/afniconnmap.git```
 - Navigate to src and open config_directories.sh
 - Update the paths to your package; you should really only need to update the top directory (i.e., location where you downloaded the fmriconnmap package)
 
