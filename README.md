@@ -12,7 +12,7 @@
 
 ## Subject-level instructions
 ### Clone git repository & configure directories
-- Fork repository to your GitHub account and clone repository to local machine 
+- Fork repository to your GitHub account and clone repository to local machine <br/> 
 ```git clone git@github.com:*username*/afniconnmap.git```
 - Navigate to src and open config_directories.sh
 - Update the paths to your package; you should really only need to update the top directory (i.e., location where you downloaded the fmriconnmap package)
@@ -20,7 +20,8 @@
 ### Configure python virtual environment
 - This package includes python source code from afni 
 - matplotlib package is required for 02_indiv_netcorr.tcsh
-- For me, the terminal command is: > source env/bin/activate but yours may differ
+- For me, the terminal command is: <br/>
+```> source env/bin/activate`` 
 - This is built into the driver.sh script configuration so update as needed; If getting an error, try uncommenting this line of code in the driver
 - The dependencies.sh script will check that matplotlib is installed and will exit if not
 
@@ -35,7 +36,8 @@
 - For each subject add errts.*.anaticor+tlrc (epi error time series) and standard space anatomical image to the respective subdirectory
 - The anatomical file will be used for QC purposes
 - Store MNI template used in the afni_proc.py registration/warping procedure in nifti directory; this will be used for QC purposes during the group-stage
-- Create subject list using the following command: > touch data/id_subj
+- Create subject list using the following command: <br/>
+> ``` touch data/id_subj```
 - Add each subject's unique identifier to the first column of id_subj
 
 ### ROI configuration
@@ -49,8 +51,8 @@
 
 ### Run 00_indiv_setup.tcsh and 01_indiv_roi_map.tcsh
 - Navigate to src directory
-- Type > ./driver.sh -s 
-- Type > ./driver.sh -r 
+- Type >``` ./driver.sh -s ```
+- Type > ``` ./driver.sh -r ```
 - Option to run both sequentially using > ./driver.sh -sr 
 - Type > ./driver.sh -h for help
 
