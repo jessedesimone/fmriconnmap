@@ -88,7 +88,7 @@ source dependencies.sh 2>&1 | tee -a $log_file
 
 # set the python virtual environment
 : 'depends on system | may not be needed'
-#source ~/env/bin/activate
+source ~/env/bin/activate
 
 # define subjects
 SUB=`cat ${data_dir}/id_subj`
