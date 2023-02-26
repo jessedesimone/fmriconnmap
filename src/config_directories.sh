@@ -8,5 +8,6 @@ log_dir=${pkg_dir}/logs; mkdir -p $log_dir              #log directory
 roi_dir=${pkg_dir}/roi                                  #roi directory
 nii_dir=${pkg_dir}/nifti                                #nifti directory
 out_dir=${pkg_dir}/output                               #output directory
+mat_out_dir=${pkg_dir}/connmat; mkdir -p $mat_out_dir   #connmat output directory
 
 
