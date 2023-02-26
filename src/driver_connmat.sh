@@ -105,8 +105,8 @@ if [ "$rflag" ]; then
         out_path_gen
     else
         echo "++ output directory already exists" 2>&1 | tee -a $log_file
-        echo "++ run driver with new output name"
-        echo "++ terminating"
+        echo "++ run driver with new output name" 2>&1 | tee -a $log_file
+        echo "++ terminating" 2>&1 | tee -a $log_file
         exit 1
     fi
 fi

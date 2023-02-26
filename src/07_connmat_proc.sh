@@ -51,8 +51,8 @@ echo "++ concatenating grp means for all ROIs into single file" 2>&1 | tee -a $l
 # python entrance
 : 'create list of ROI labels for python use'
 awk '{$1=""}1' ${roi_dir}/00_input_keys_values.txt | awk '{$1=$1}1' > $mat_out_dir/py_roi_labels.txt
-#pip3 install -r requirements.txt
-#python grp_corr.py
+pip3 install -r requirements.txt
+python grp_corr.py
 
 # clean up
 #rm -rf $mat_out_dir/_tmp*
