@@ -18,7 +18,7 @@ gen_error_msg="\
     Notes:
     - -smc options must be run sequentially; that is, -m is dependent on -s output and -c is dependent on -m output
     - if -o option is not specified, the results will be stored in output directory
-    - if -o option is specified, the results will be stored in output/<-o string>
+    - if -o option is specified, the results will be stored in output/<[-o string]>
 
     "
     while getopts ":hsmco:" opt; do
@@ -48,7 +48,7 @@ gen_error_msg="\
         esac
     done
     if [ $OPTIND -eq 1 ]; then 
-        echo "++ ERROR: driver_group.sh requires at least 1 argument"
+        echo "++ ERROR: driver_group.sh requires at least 2 arguments"
         echo "$gen_error_msg"
         exit 1
     fi
@@ -142,7 +142,8 @@ if [ "$sflag" ]; then
     echo " " 2>&1 | tee -a $log_file
     echo "++ setup option selected" 2>&1 | tee -a $log_file
     tcsh -c ${src_dir}/00_group_setup.tcsh 2>&1 | tee -a $log_file
-
+    cp roi_list.txt ${roi_dir}/roi_list.txt
+    
     ROI=`cat roi_list.txt`
     for roi in ${ROI[@]}
     do
