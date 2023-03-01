@@ -1,0 +1,46 @@
+1   DefaultMode.MPFC
+2   DefaultMode.LP_L
+3   DefaultMode.LP_R
+4   DefaultMode.PCC
+5   SensoriMotor.M1_L
+6   SensoriMotor.M1_R
+7   SensoriMotor.SMA
+
+
+
+
+12  Salience.ACC
+13  Salience.AInsula_L
+14  Salience.AInsula_R
+15  Salience.RPFC_L
+16  Salience.RPFC_R
+17  Salience.SMG_L
+18  Salience.SMG_R
+19  DorsalAttention.FEF_L
+20  DorsalAttention.FEF_R
+21  DorsalAttention.IPS_L
+22  DorsalAttention.IPS_R
+23  FrontoParietal.LPFC_L
+24  FrontoParietal.LPFC_R
+25  FrontoParietal.PPC_L
+26  FrontoParietal.PPC_R
+
+
+
+
+31  Limbic.aPaHC_R
+32  Limbic.aPaHC_L
+33  Limbic.Hipp_R
+34  Limbic.Hipp_L
+35  Limbic.Amyg_R
+36  Limbic.Amyg_L
+
+
+
+
+
+#Additions
+insula l r
+temporal inf l r
+temporal med l r
+temporal sup l r
