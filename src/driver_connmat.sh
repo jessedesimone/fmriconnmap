@@ -94,7 +94,7 @@ out_path_gen () {
     mkdir $mat_out_dir
     echo $mat_out_dir > $mat_out_dir/_tmp_outpath.txt
     cp $mat_out_dir/_tmp_outpath.txt ${pkg_dir}/connmat/_tmp_outpath.txt
-    source ${src_dir}/07_connmat_proc.sh
+    source ${src_dir}/06_connmat_proc.sh
 }
 
 if [ "$rflag" ]; then

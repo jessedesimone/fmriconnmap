@@ -141,7 +141,7 @@ cd $out_dir
 if [ "$sflag" ]; then
     echo " " 2>&1 | tee -a $log_file
     echo "++ setup option selected" 2>&1 | tee -a $log_file
-    tcsh -c ${src_dir}/04_group_setup.tcsh 2>&1 | tee -a $log_file
+    tcsh -c ${src_dir}/03_group_setup.tcsh 2>&1 | tee -a $log_file
     cp roi_list.txt ${roi_dir}/roi_list.txt
     
     ROI=`cat roi_list.txt`
@@ -197,7 +197,7 @@ if [ "$mflag" ]; then
                 # create group-averaged z-score maps
                 if [ ! -f grp_wb_z_2_${roi}_mean_pos.nii.gz ]; then
                     : 'outfile does not exist yet - create outfile'
-                    tcsh -c ${src_dir}/05_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+                    tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
                 else 
                     : 'if outfile does exist, check that it was created using the correct number of input files'
                     sub_in=$(awk 'END { print NR }' ${data_dir}/id_subj)
@@ -214,7 +214,7 @@ if [ "$mflag" ]; then
                         echo "++ group-averaged z-score maps already exist but do not match the specified number of subject inputs" 2>&1 | tee -a $log_file
                         echo "++ OVERWRITING EXISTING OUTFILES" 2>&1 | tee -a $log_file
                         rm -rf grp_wb_z_*_${roi}_*.nii.gz
-                        tcsh -c ${src_dir}/05_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
+                        tcsh -c ${src_dir}/04_group_WB_mean_maps.tcsh 2>&1 | tee -a $log_file
                     fi
                 fi
             #clean up
@@ -253,7 +253,7 @@ if [ "$cflag" ]; then
             exit 1
         else
             if [ ! -f grp_wb_z_${roi}_fwer.nii.gz ]; then
-                tcsh -c ${src_dir}/06_group_connmap.tcsh 2>&1 | tee -a $log_file
+                tcsh -c ${src_dir}/05_group_connmap.tcsh 2>&1 | tee -a $log_file
             else 
                 : 'calculate the number of subject infile files used to create group averaged z-score map'
                 HIST=`3dinfo -history grp_wb_z_0_${roi}_mean.nii.gz | tail -n1`
