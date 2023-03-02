@@ -1,12 +1,15 @@
 
 fmriconnmap package
 ==========
-Version: 0.0.4
+Version: 0.0.5
 Status: build::passing
 Date: Feb 2023
 
 Author: J DeSimone
 url="https://github.com/jessedesimone/fmriconnmap"
+
+## [0.0.5] - 2023-03-02
+- added connmat function to create group-level connectivity matrix for roi-to-roi comparisons
 
 ## [0.0.4] - 2023-02-22
 - added function to erode anatomical mask from edges to help clean up final group-level connectivity maps
