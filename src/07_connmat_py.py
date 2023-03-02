@@ -29,7 +29,6 @@ outfile_mat='grp_corr.jpg'; oname2=outpath+"/"+outfile_mat
 # define roi_names
 # todo - create list based on input file - make automated
 rf = pd.read_csv(rname, names=['roi_name']); roi_names=rf.roi_name.to_list()
-#roi_names = ['DefaultMode.PCC', 'Salience.ACC', 'Motor.M1_L', 'Visual.Lateral_L', 'DorsalAttention.FEF_R', 'Limbic.Hipp_R']
 
 # read in group roi means
 df = pd.read_csv(fname, delimiter = ' ', names=roi_names)
@@ -48,6 +47,6 @@ ax.set_xticklabels(
     ax.get_xticklabels(),
     rotation=45,
     horizontalalignment='right')
-#plt.savefig(oname2)
+plt.savefig(oname2)
 plt.tight_layout()
 plt.show()

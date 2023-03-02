@@ -10,6 +10,13 @@
 - This can be used for visual purposes (i.e., QC the functional network associated with a given ROI) or statistical purposes (i.e., restricting statistical tests to a masked region)
 - This feature creates a FWER-corrected group-level map/mask based on the cluster-size threshold for a given voxel-wise p-value (0.001) and alpha-level threshold (0.01); see 3dClustSim in AFNI for more details.
 
+### Function 3 - Create group-level connectivity matrix
+- create a group-level connectivity matrix (pearson correlation) for each ROI-to-ROI comparison
+- computes 3dROIstats on errts file for each subject and each roi
+- for each roi, concatenates subject-level roistats
+- for each roi, computes mean across all subjects
+- computes pearson correlation for each ROI-to-ROI comparison
+
 ## Subject-level instructions
 ### Clone git repository & configure directories
 - Fork repository to your GitHub account and clone repository to local machine <br/> 
@@ -124,6 +131,13 @@
 ### QC 
 - Naviagate to output/*roi* directories
 - Review grp_wb_z_*roi*_fwer.*view* jpeg files to confirm expected network-level connectivity for each of the ROI coordinate centers
+
+## connmat instructions
+- navigate to src directory
+- Type > ```./driver_connmat.sh -r -o <output directory string>```
+- Output files
+    - connmat/< specified output directory >/grp_corr.csv: pearson correlation values for ROI-to-ROI comparisons
+    - connmat/< specified output directory >/grp_corr.jpg: group-level correlation matrix
 
 ## References
 - Please cite AFNI gurus when using source code from this package <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/published/citations.html#afni-software-package>

@@ -3,7 +3,7 @@
 # Module to prepare data for grp_corr.py
 
 # =================================================================
-echo "++ Running 03_grp_proc.tcsh"
+echo "++ Running 06_grp_proc.tcsh"
 
 cd $mat_out_dir
 
@@ -51,11 +51,13 @@ echo "++ concatenating grp means for all ROIs into single file" 2>&1 | tee -a $l
 # python entrance
 : 'create list of ROI labels for python use'
 awk '{$1=""}1' ${roi_dir}/00_input_keys_values.txt | awk '{$1=$1}1' > $mat_out_dir/py_roi_labels.txt
-pip3 install -r requirements.txt
-python 07_connmat_py.py
+echo "++ installing python requirements" 2>&1 | tee -a $log_file
+pip3 install -r ${src_dir}/requirements.txt
+echo "++ entering python - creating connectivity matrix" 2>&1 | tee -a $log_file
+python3.9 ${src_dir}/07_connmat_py.py
 
 # clean up
-#rm -rf $mat_out_dir/_tmp*
-#rm -rf *.1D
-#cd ../
-#rm -rf _tmp*
+rm -rf $mat_out_dir/_tmp*
+rm -rf *.1D
+cd ../
+rm -rf _tmp*
