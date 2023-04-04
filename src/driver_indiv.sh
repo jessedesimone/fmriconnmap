@@ -18,7 +18,7 @@ gen_error_msg="\
     NOTES: 
 
     - [srn] options must be run sequentially; that is, [-r] is dependent on [-s] output and [-n] is dependent on [-r] output
-    - if -o option is given, will remove all files except for original input files in data directoryy
+    - if -o option is given, will remove all files except for original input files in data directory
     - use -o with *extreme caution*
     - this sould only be used if you want to run package using with a clean slate
 
