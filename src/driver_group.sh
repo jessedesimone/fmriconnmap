@@ -91,9 +91,10 @@ source dependencies.sh 2>&1 | tee -a $log_file
 source ~/env/bin/activate
 
 # define subjects
-SUB=`cat ${data_dir}/id_subj`
+flist=id_subj
+SUB=`cat ${data_dir}/$flist`
 echo "number of subjects in analysis" 2>&1 | tee -a $log_file
-awk 'END { print NR }' ${data_dir}/id_subj 2>&1 | tee -a $log_file
+awk 'END { print NR }' ${data_dir}/$flist 2>&1 | tee -a $log_file
 
 # define roi coordinate files
 ilist=${roi_dir}/00_list_of_all_roi_centers.txt
