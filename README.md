@@ -28,7 +28,7 @@
 - This package includes python source code from afni 
 - matplotlib package is required for 02_indiv_netcorr.tcsh
 - For me, the terminal command is: <br/>
-> ```source env/bin/activate``` 
+> ```source ~/env/bin/activate``` 
 - This is built into the driver.sh script configuration so update as needed; If getting an error, try uncommenting this line of code in the driver
 - The dependencies.sh script will check that matplotlib is installed and will exit if not
 
