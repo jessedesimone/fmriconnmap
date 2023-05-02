@@ -91,7 +91,7 @@ source dependencies.sh 2>&1 | tee -a $log_file
 source ~/env/bin/activate
 
 # define subjects
-flist=id_subj
+flist='id_subj'
 SUB=`cat ${data_dir}/$flist`
 echo "number of subjects in analysis" 2>&1 | tee -a $log_file
 awk 'END { print NR }' ${data_dir}/$flist 2>&1 | tee -a $log_file
