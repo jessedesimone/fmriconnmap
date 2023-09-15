@@ -74,9 +74,9 @@
 ### QC NetCorr output files
 - Output files
     - data/*subj*/NETCORR_000_INDIV/: sub-directory that holds the whole brain correlation maps of each ROI’s average time series; there are also images of those volumes stored there.
-    - NETCORR_000.netcc: matrices of properties of the network of ROIs: Pearson correlation coefficient (CC) and its Fisher-Z transform (FZ)
+    - NETCORR_000.netcc: matrices of properties of the network of ROIs: Pearson correlation coefficient (CC) and its Fisher-Z transform (FZ); can be compiled and viewed using ***FATCAT_matplot***
     - NETCORR_000_netcc_FZ.jpg: an image of the Fisher-Z transform (FZ) matrix
-    - NETCORR_000.netts: text file containing the mean time series of each ROI
+    - NETCORR_000.netts: text file containing the mean time series of each ROI; this can be used to generate a group average and create group-level connectivity matrixes
     - NETCORR_000.roidat: text file containing info of “how full” each ROI is– basically, a way to check if masking or other processing steps might have left null time series in any ROI mask.
     - wb_z_*roi*.*view*.jpg: sets of images of the WB correlation maps of each ROI. Each ROI has 3 images (axi, cor and sag viewplanes), and there is also a “*_pbar.jpg” file of the colorbar used, and “*_pbar.txt” file that records the colorbar min, max and (optional) threshold value used.
 
