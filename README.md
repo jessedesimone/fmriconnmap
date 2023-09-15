@@ -127,12 +127,6 @@
 - Naviagate to output/*roi* directories
 - Review grp_wb_z_*roi*_fwer.*view* jpeg files to confirm expected network-level connectivity for each of the ROI coordinate centers
 
-## connmat instructions
-- navigate to src directory
-- Type > ```./driver_connmat.sh -r -o <output directory string>```
-- Output files
-    - connmat/< specified output directory >/grp_corr.csv: pearson correlation values for ROI-to-ROI comparisons
-    - connmat/< specified output directory >/grp_corr.jpg: group-level correlation matrix
 
 ## References
 - Please cite AFNI gurus when using source code from this package <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/published/citations.html#afni-software-package>
