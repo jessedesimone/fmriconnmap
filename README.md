@@ -6,7 +6,7 @@
 ## Instructions
 [Instructions for this project](./INSTRUCTIONS.md)
 
-## Example Output for Default Mode Netowkr
+## Example Output for Default Mode Network
 ![alt text](./images/group/default_mode_full_view.jpg)
 
 ## References
